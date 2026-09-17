@@ -74,6 +74,27 @@
 .mode-output h2 { max-width: 520px; margin: 39px 0 17px; font-size: clamp(34px, 4.2vw, 60px); line-height: .94; letter-spacing: -.065em; }
 .mode-output p { max-width: 565px; margin: 0; color: #5d5b55; font-size: 15px; line-height: 1.55; }
 .mode-output small { display: block; margin-top: 28px; color: #77746e; font: 10px/1.3 monospace; letter-spacing: .06em; }
+
+/* Prominent enough to be memorable, specific enough not to feel like a lifestyle moodboard. */
+.off-clock { overflow: hidden; padding: 112px 0 118px; background: #dbe3e8; color: var(--ink); position: relative; }
+.off-clock::before { content: 'SIDE QUESTS'; position: absolute; right: -2vw; bottom: -2.1vw; color: color-mix(in srgb, var(--accent) 20%, transparent); font-size: clamp(72px, 16vw, 238px); font-weight: 700; letter-spacing: -.1em; line-height: .8; pointer-events: none; }
+.off-clock-inner { position: relative; z-index: 1; }
+.off-clock .section-label { color: #5d7485; }
+.off-clock .section-label .line { background: color-mix(in srgb, var(--accent) 45%, #9eabb2); }
+.off-clock-head { display: flex; justify-content: space-between; align-items: end; gap: 54px; margin: 72px 0 65px; }
+.off-clock-kicker { margin: 0 0 19px; color: #607789; font: 700 10px/1 monospace; letter-spacing: .12em; }
+.off-clock h2 { margin: 0; font-size: clamp(52px, 7vw, 98px); line-height: .88; letter-spacing: -.075em; }
+.off-clock h2 em { font-family: var(--serif); font-weight: 400; }
+.off-clock-head > p { max-width: 295px; margin: 0 10px 5px 0; color: #44515a; font: 19px/1.32 var(--serif); letter-spacing: -.025em; }
+.off-clock-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid #aebbc2; }
+.off-clock-card { min-height: 265px; position: relative; padding: 24px 24px 27px 0; border-bottom: 1px solid #aebbc2; transition: background .32s ease, transform .32s cubic-bezier(.22,1,.36,1), padding .32s cubic-bezier(.22,1,.36,1); }
+.off-clock-card + .off-clock-card { padding-left: 24px; border-left: 1px solid #aebbc2; }
+.off-clock-card svg { display: block; margin-bottom: 42px; color: #607789; transition: transform .32s cubic-bezier(.22,1,.36,1); }
+.off-clock-card > span { display: block; color: #607789; font: 10px/1 monospace; letter-spacing: .1em; }
+.off-clock-card h3 { margin: 13px 0 11px; font-size: 27px; letter-spacing: -.055em; }
+.off-clock-card p { max-width: 270px; margin: 0; color: #53616a; font-size: 14px; line-height: 1.5; }
+.off-clock-card:hover { z-index: 1; transform: translateY(-8px); padding-top: 31px; background: color-mix(in srgb, var(--paper) 55%, transparent); box-shadow: 0 13px 0 color-mix(in srgb, var(--accent) 35%, transparent); }
+.off-clock-card:hover svg { transform: rotate(-8deg) scale(1.12); }
 @media (max-width:700px) {
   .about { width: 100%; margin-left: 0; margin-right: 0; padding-left: 17px; padding-right: 17px; }
   .about > .section-label, .about > .about-grid { width: 100%; }
@@ -82,6 +103,13 @@
   .working-set { padding: 76px 0 79px; }
   .working-set-grid { grid-template-columns: 1fr; gap: 38px; margin-top: 48px; }
   .mode-output { min-height: 0; padding: 25px 22px; box-shadow: 6px 6px 0 color-mix(in srgb, var(--accent) 24%, transparent); }
+  .off-clock { padding: 78px 0 83px; }
+  .off-clock::before { right: -9vw; bottom: -1vw; }
+  .off-clock-head { display: block; margin: 51px 0 47px; }
+  .off-clock-head > p { margin-top: 25px; }
+  .off-clock-grid { grid-template-columns: 1fr; }
+  .off-clock-card, .off-clock-card + .off-clock-card { min-height: 0; padding: 22px 0 24px; border-left: 0; }
+  .off-clock-card svg { margin-bottom: 25px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-kicker, .hero h1, .hero h1 em, .hero-bottom, .hero-grid span, .section-label, .section-intro, .project, .signal-strip, .about-grid, .notes-grid, .footer-grid { animation: none; }
@@ -93,4 +121,6 @@
   .project:hover { transform: none; }
   .mode-output { animation: none; }
   .mode-signal i { animation: none; }
+  .off-clock-card:hover { transform: none; }
+  .off-clock-card:hover svg { transform: none; }
 }
