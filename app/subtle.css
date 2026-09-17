@@ -1,7 +1,15 @@
-/* Warm brass replaces the sharper lime accents on the restored portfolio. */
-:root { --accent: #a58b63; }
-.nav-links a:hover, .text-link:hover, .project-meta a:hover { color: #806b4d; }
-.pulse { background: #927b59; box-shadow: 0 0 0 5px #e5ded2; }
+/* Quiet slate-blue accents keep the portfolio technical without shouting. */
+:root { --accent: #6e8496; }
+.nav-links a:hover, .text-link:hover, .project-meta a:hover { color: #607789; }
+.pulse { background: #71899a; box-shadow: 0 0 0 5px #dbe3e8; }
 .hero-grid span:nth-child(3n) { background: var(--accent); border-color: var(--accent); }
-.about-copy a { color: #bca37d; border-bottom-color: #bca37d; }
-.note-card svg { color: #927b59; }
+.about-copy a { color: #93aabb; border-bottom-color: #93aabb; }
+.note-card svg { color: #71899a; }
+.about { width: 100%; max-width: none; margin-left: 0; margin-right: 0; padding-left: max(24px, calc((100vw - 1180px) / 2)); padding-right: max(24px, calc((100vw - 1180px) / 2)); }
+.about > .section-label, .about > .about-grid { width: min(1180px, calc(100% - 48px)); margin-left: auto; margin-right: auto; }
+.about > .about-grid { margin-top: 74px; }
+.off-hours { color: #9da9b2 !important; font-size: 14px !important; }
+@media (max-width:700px) {
+  .about { width: 100%; margin-left: 0; margin-right: 0; padding-left: 17px; padding-right: 17px; }
+  .about > .section-label, .about > .about-grid { width: 100%; }
+}
