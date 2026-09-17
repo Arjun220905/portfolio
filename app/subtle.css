@@ -1,0 +1,7 @@
+/* Warm brass replaces the sharper lime accents on the restored portfolio. */
+:root { --accent: #a58b63; }
+.nav-links a:hover, .text-link:hover, .project-meta a:hover { color: #806b4d; }
+.pulse { background: #927b59; box-shadow: 0 0 0 5px #e5ded2; }
+.hero-grid span:nth-child(3n) { background: var(--accent); border-color: var(--accent); }
+.about-copy a { color: #bca37d; border-bottom-color: #bca37d; }
+.note-card svg { color: #927b59; }
