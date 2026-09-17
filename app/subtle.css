@@ -1,5 +1,5 @@
 /* Quiet slate-blue accents keep the portfolio technical without shouting. */
-:root { --accent: #6e8496; }
+:root { --accent: #6e8496; --pointer-x: .5; --pointer-y: .5; --scroll-progress: 0; }
 .nav-links a:hover, .text-link:hover, .project-meta a:hover { color: #607789; }
 .pulse { background: #71899a; box-shadow: 0 0 0 5px #dbe3e8; }
 .hero-grid span:nth-child(3n) { background: var(--accent); border-color: var(--accent); }
@@ -39,6 +39,20 @@
 .signal-strip > div:hover { transform: translateY(-4px); background: color-mix(in srgb, var(--accent) 7%, transparent); }
 .socials a { transition: transform .25s cubic-bezier(.22,1,.36,1), background-color .25s ease, color .25s ease; }
 .socials a:hover { transform: translateY(-4px) rotate(-6deg); }
+
+/* The page responds to the reader without asking them to learn a new control. */
+.scroll-progress { position: fixed; z-index: 40; top: 0; left: 0; width: 100%; height: 3px; background: var(--accent); transform: scaleX(var(--scroll-progress)); transform-origin: left; box-shadow: 0 1px 12px color-mix(in srgb, var(--accent) 55%, transparent); }
+.hero { isolation: isolate; }
+.hero-orb { position: absolute; z-index: -1; width: 340px; height: 340px; right: -180px; top: 115px; border-radius: 50%; opacity: .28; background: radial-gradient(circle at 32% 32%, color-mix(in srgb, var(--accent) 65%, white), color-mix(in srgb, var(--accent) 30%, transparent) 35%, transparent 68%); filter: blur(3px); transform: translate3d(calc((var(--pointer-x) - .5) * -24px), calc((var(--pointer-y) - .5) * -18px), 0); transition: transform .2s cubic-bezier(.22,1,.36,1); }
+.hero-grid { transform: rotate(-18deg) translate3d(calc((var(--pointer-x) - .5) * 20px), calc((var(--pointer-y) - .5) * 14px), 0); transition: transform .18s cubic-bezier(.22,1,.36,1); will-change: transform; }
+.project-list { perspective: 1100px; }
+.project { --tilt-x: 0deg; --tilt-y: 0deg; --shine-x: 50%; --shine-y: 50%; position: relative; transform-style: preserve-3d; will-change: transform; }
+.project::after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(520px circle at var(--shine-x) var(--shine-y), color-mix(in srgb, var(--accent) 15%, transparent), transparent 40%); transition: opacity .3s ease; }
+.project:hover { transform: translateY(-7px) rotateX(var(--tilt-y)) rotateY(var(--tilt-x)); }
+.project:hover::after { opacity: 1; }
+.nav-cta, .text-link, .project-meta a, .email-link { transition: color .22s ease, transform .22s cubic-bezier(.22,1,.36,1), border-color .22s ease; }
+.nav-cta:active, .text-link:active, .project-meta a:active, .email-link:active { transform: scale(.97); }
+@media (prefers-reduced-transparency: reduce) { .hero-orb { opacity: .12; filter: none; } }
 @media (max-width:700px) {
   .about { width: 100%; margin-left: 0; margin-right: 0; padding-left: 17px; padding-right: 17px; }
   .about > .section-label, .about > .about-grid { width: 100%; }
@@ -49,4 +63,8 @@
   .hero-kicker, .hero h1, .hero h1 em, .hero-bottom, .hero-grid span, .section-label, .section-intro, .project, .signal-strip, .about-grid, .notes-grid, .footer-grid { animation: none; }
   .section-label .line::after, .signal-bars i { animation: none; }
   .project, .signal-strip > div, .socials a { transition: none; }
+  .scroll-progress { display: none; }
+  .hero-orb { display: none; }
+  .hero-grid { transform: rotate(-18deg); transition: none; }
+  .project:hover { transform: none; }
 }
