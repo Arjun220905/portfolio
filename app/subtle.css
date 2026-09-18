@@ -13,7 +13,7 @@
 .signal-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; padding: 0 0 28px; border-bottom: 1px solid var(--line); }
 .signal-strip > div { display: grid; grid-template-columns: 30px 1fr; grid-template-rows: auto auto; gap: 3px 10px; padding: 22px 24px 20px 0; border-top: 1px solid var(--line); }
 .signal-strip > div + div { padding-left: 24px; border-left: 1px solid var(--line); }
-.signal-strip span { grid-row: 1 / 3; color: var(--accent); font: 11px/1.2 monospace; }
+.signal-strip span { grid-row: 1 / 3; color: var(--accent); font: 11px/1.2 Arial, Helvetica, sans-serif; }
 .signal-strip strong { font-size: 12px; letter-spacing: .06em; }
 .signal-strip small { color: var(--muted); font-size: 12px; line-height: 1.4; }
 /* Motion language: editorial reveals, a quiet scanline, and tactile project cards. */
@@ -62,18 +62,18 @@
 .mode-controls > p { max-width: 270px; margin: 0 0 27px; color: #5d5b55; font: 27px/1.06 var(--serif); letter-spacing: -.045em; }
 .mode-buttons { border-top: 1px solid var(--line); }
 .mode-buttons button { width: 100%; display: flex; gap: 14px; align-items: center; padding: 14px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; color: #77746e; font: 600 12px/1 Arial, Helvetica, sans-serif; text-align: left; cursor: pointer; transition: color .2s ease, padding-left .28s cubic-bezier(.22,1,.36,1), background .2s ease; }
-.mode-buttons button span { color: var(--accent); font: 11px/1 monospace; }
+.mode-buttons button span { color: var(--accent); font: 11px/1 Arial, Helvetica, sans-serif; }
 .mode-buttons button[aria-pressed='true'] { padding-left: 12px; background: color-mix(in srgb, var(--accent) 9%, transparent); color: var(--ink); }
 .mode-buttons button:hover { color: var(--ink); }
 .mode-buttons button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 @keyframes mode-materialize { from { opacity: 0; transform: translateY(16px) scale(.985); filter: blur(4px); } to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
 @keyframes mode-beacon { from { transform: scale(.55); opacity: .3; } to { transform: scale(1); opacity: 1; } }
 .mode-output { min-height: 285px; padding: 32px 34px 30px; border: 1px solid var(--ink); background: color-mix(in srgb, var(--paper) 82%, white); animation: mode-materialize .42s cubic-bezier(.22,1,.36,1) both; box-shadow: 9px 9px 0 color-mix(in srgb, var(--accent) 24%, transparent); }
-.mode-signal { display: flex; gap: 9px; align-items: center; color: #6e8496; font: 700 10px/1 monospace; letter-spacing: .1em; }
+.mode-signal { display: flex; gap: 9px; align-items: center; color: #6e8496; font: 700 10px/1 Arial, Helvetica, sans-serif; letter-spacing: .1em; }
 .mode-signal i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: mode-beacon 1s ease-in-out infinite alternate; }
 .mode-output h2 { max-width: 520px; margin: 39px 0 17px; font-size: clamp(34px, 4.2vw, 60px); line-height: .94; letter-spacing: -.065em; }
 .mode-output p { max-width: 565px; margin: 0; color: #5d5b55; font-size: 15px; line-height: 1.55; }
-.mode-output small { display: block; margin-top: 28px; color: #77746e; font: 10px/1.3 monospace; letter-spacing: .06em; }
+.mode-output small { display: block; margin-top: 28px; color: #77746e; font: 10px/1.3 Arial, Helvetica, sans-serif; letter-spacing: .06em; }
 
 /* Prominent enough to be memorable, specific enough not to feel like a lifestyle moodboard. */
 .off-clock { overflow: hidden; padding: 112px 0 118px; background: #dbe3e8; color: var(--ink); position: relative; }
@@ -82,7 +82,7 @@
 .off-clock .section-label { color: #5d7485; }
 .off-clock .section-label .line { background: color-mix(in srgb, var(--accent) 45%, #9eabb2); }
 .off-clock-head { display: flex; justify-content: space-between; align-items: end; gap: 54px; margin: 72px 0 65px; }
-.off-clock-kicker { margin: 0 0 19px; color: #607789; font: 700 10px/1 monospace; letter-spacing: .12em; }
+.off-clock-kicker { margin: 0 0 19px; color: #607789; font: 700 10px/1 Arial, Helvetica, sans-serif; letter-spacing: .12em; }
 .off-clock h2 { margin: 0; font-size: clamp(52px, 7vw, 98px); line-height: .88; letter-spacing: -.075em; }
 .off-clock h2 em { font-family: var(--serif); font-weight: 400; }
 .off-clock-head > p { max-width: 295px; margin: 0 10px 5px 0; color: #44515a; font: 19px/1.32 var(--serif); letter-spacing: -.025em; }
@@ -90,7 +90,7 @@
 .off-clock-card { min-height: 265px; position: relative; padding: 24px 24px 27px 0; border-bottom: 1px solid #aebbc2; transition: background .32s ease, transform .32s cubic-bezier(.22,1,.36,1), padding .32s cubic-bezier(.22,1,.36,1); }
 .off-clock-card + .off-clock-card { padding-left: 24px; border-left: 1px solid #aebbc2; }
 .off-clock-card svg { display: block; margin-bottom: 42px; color: #607789; transition: transform .32s cubic-bezier(.22,1,.36,1); }
-.off-clock-card > span { display: block; color: #607789; font: 10px/1 monospace; letter-spacing: .1em; }
+.off-clock-card > span { display: block; color: #607789; font: 10px/1 Arial, Helvetica, sans-serif; letter-spacing: .1em; }
 .off-clock-card h3 { margin: 13px 0 11px; font-size: 27px; letter-spacing: -.055em; }
 .off-clock-card p { max-width: 270px; margin: 0; color: #53616a; font-size: 14px; line-height: 1.5; }
 .off-clock-card:hover { z-index: 1; transform: translateY(-8px); padding-top: 31px; background: color-mix(in srgb, var(--paper) 55%, transparent); box-shadow: 0 13px 0 color-mix(in srgb, var(--accent) 35%, transparent); }
