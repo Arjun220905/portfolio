@@ -4,68 +4,58 @@ import { useEffect } from 'react';
 
 export function MotionLayer() {
   useEffect(() => {
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (reducedMotion.matches) return;
-
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
     const root = document.documentElement;
-    const updateProgress = () => {
-      const distance = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      root.style.setProperty('--scroll-progress', String(window.scrollY / distance));
-    };
+    let frame = 0;
+    let observer: IntersectionObserver | undefined;
+    const animations = new Set<Animation>();
 
-    let pointerFrame = 0;
-    const updatePointer = (event: PointerEvent) => {
-      cancelAnimationFrame(pointerFrame);
-      pointerFrame = requestAnimationFrame(() => {
-        root.style.setProperty('--pointer-x', String(event.clientX / window.innerWidth));
-        root.style.setProperty('--pointer-y', String(event.clientY / window.innerHeight));
+    const updateProgress = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const distance = Math.max(1, root.scrollHeight - window.innerHeight);
+        root.style.setProperty('--scroll-progress', String(window.scrollY / distance));
       });
     };
 
-    updateProgress();
-    window.addEventListener('scroll', updateProgress, { passive: true });
-    window.addEventListener('pointermove', updatePointer, { passive: true });
-
-    const projectCards = Array.from(document.querySelectorAll<HTMLElement>('.project'));
-    const canTilt = window.matchMedia('(pointer: fine)').matches;
-    const cleanups = projectCards.map((card) => {
-      if (!canTilt) return () => undefined;
-
-      let tiltFrame = 0;
-      const reset = () => {
-        card.style.setProperty('--tilt-x', '0deg');
-        card.style.setProperty('--tilt-y', '0deg');
-        card.style.setProperty('--shine-x', '50%');
-        card.style.setProperty('--shine-y', '50%');
-      };
-      const tilt = (event: PointerEvent) => {
-        cancelAnimationFrame(tiltFrame);
-        tiltFrame = requestAnimationFrame(() => {
-          const rect = card.getBoundingClientRect();
-          const x = (event.clientX - rect.left) / rect.width;
-          const y = (event.clientY - rect.top) / rect.height;
-          card.style.setProperty('--tilt-x', `${(x - 0.5) * 1.8}deg`);
-          card.style.setProperty('--tilt-y', `${(0.5 - y) * 1.2}deg`);
-          card.style.setProperty('--shine-x', `${x * 100}%`);
-          card.style.setProperty('--shine-y', `${y * 100}%`);
-        });
-      };
-
-      card.addEventListener('pointermove', tilt);
-      card.addEventListener('pointerleave', reset);
-      return () => {
-        cancelAnimationFrame(tiltFrame);
-        card.removeEventListener('pointermove', tilt);
-        card.removeEventListener('pointerleave', reset);
-        reset();
-      };
-    });
-
-    return () => {
-      cancelAnimationFrame(pointerFrame);
+    const configure = () => {
+      observer?.disconnect();
+      animations.forEach(animation => animation.cancel());
+      animations.clear();
       window.removeEventListener('scroll', updateProgress);
-      window.removeEventListener('pointermove', updatePointer);
-      cleanups.forEach((cleanup) => cleanup());
+      window.removeEventListener('resize', updateProgress);
+      cancelAnimationFrame(frame);
+      if (preference.matches) return;
+
+      updateProgress();
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      window.addEventListener('resize', updateProgress, { passive: true });
+      observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          observer?.unobserve(entry.target);
+          // Animate only when reached; content stays readable if scripting fails.
+          const animation = entry.target.animate([
+            { opacity: 0.25, transform: 'translateY(20px)' },
+            { opacity: 1, transform: 'translateY(0)' },
+          ], { duration: 650, easing: 'cubic-bezier(.16, 1, .3, 1)' });
+          animations.add(animation);
+          animation.onfinish = () => animations.delete(animation);
+        });
+      }, { threshold: 0.08 });
+      document.querySelectorAll('.section-intro, .project, .working-set-grid, .off-clock-head, .off-clock-card, .about-grid, .notes-grid, .footer').forEach(element => observer?.observe(element));
+    };
+
+    configure();
+    preference.addEventListener('change', configure);
+    return () => {
+      observer?.disconnect();
+      animations.forEach(animation => animation.cancel());
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', updateProgress);
+      window.removeEventListener('resize', updateProgress);
+      preference.removeEventListener('change', configure);
+      root.style.removeProperty('--scroll-progress');
     };
   }, []);
 
