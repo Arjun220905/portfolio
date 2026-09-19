@@ -82,11 +82,6 @@ export default function Home() {
             View selected work <ArrowUpRight size={16} />
           </a>
         </div>
-        <div className="hero-art" aria-hidden="true">
-          <div className="art-caption"><span>ARJUN M</span><span>SELECTED WORK / 2026</span></div>
-          <div className="art-reel"><div className="reel-core">A</div></div>
-          <div className="art-footer"><span>Engineering.<br />A little curiosity.</span><span className="art-star">✳</span></div>
-        </div>
       </section>
       <section id="work" className="work section shell">
         <div className="section-label">
