@@ -1,5 +1,5 @@
 /* Warm paper, espresso ink, terracotta surfaces. Headlines stay one color. */
-:root { --ink: #302820; --paper: #f6f1e7; --muted: #6c6257; --line: #d7cbbb; --accent: #a84b32; --clay: #ce7557; --blush: #ead5c4; --pointer-x: .5; --pointer-y: .5; --scroll-progress: 0; }
+:root { --ink: #302820; --paper: #f6f1e7; --muted: #6c6257; --line: #d7cbbb; --accent: #a84b32; --clay: #d47d60; --blush: #ead5c4; --pointer-x: .5; --pointer-y: .5; --scroll-progress: 0; }
 body { background: var(--paper); color: var(--ink); }
 em, i { font-style: normal; }
 ::selection { background: var(--blush); color: var(--ink); }
