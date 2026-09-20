@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
 const modes = [
   {
@@ -35,6 +36,7 @@ const modes = [
 export function WorkingSet() {
   const [activeId, setActiveId] = useState(modes[0].id);
   const active = modes.find((mode) => mode.id === activeId) ?? modes[0];
+  const reduceMotion = useReducedMotion();
 
   return (
     <section className="working-set shell" aria-labelledby="working-set-title">
@@ -63,20 +65,26 @@ export function WorkingSet() {
             ))}
           </div>
         </div>
-        <div
-          className="mode-output"
-          data-mode={active.id}
-          key={active.id}
-          aria-live="polite"
-        >
-          <div className="mode-signal">
-            <i />
-            <span>{active.signal}</span>
-          </div>
-          <h2 id="working-set-title">{active.title}</h2>
-          <p>{active.text}</p>
-          <small>{active.detail}</small>
-        </div>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            className="mode-output"
+            data-mode={active.id}
+            key={active.id}
+            aria-live="polite"
+            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 18, scale: 0.985 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -10, scale: 0.99 }}
+            transition={{ duration: reduceMotion ? 0.18 : 0.36, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="mode-signal">
+              <i />
+              <span>{active.signal}</span>
+            </div>
+            <h2 id="working-set-title">{active.title}</h2>
+            <p>{active.text}</p>
+            <small>{active.detail}</small>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );

@@ -103,7 +103,7 @@ html[data-theme='dark'] .project, html[data-theme='dark'] .off-clock-card { back
 .mode-buttons button[aria-pressed='true'] { padding-left: 12px; color: var(--ink); }
 .mode-buttons button[aria-pressed='true'] span { color: var(--accent); }
 .mode-buttons button[aria-pressed='true']::after { opacity: 1; border-color: var(--accent); background: var(--accent); transform: scale(1.35); }
-.mode-output { position: relative; isolation: isolate; overflow: hidden; min-height: 350px; padding: 38px; border: 1px solid var(--line); background: #ffffff; border-radius: 12px; color: var(--ink); box-shadow: 0 18px 42px #1e3a8a10; animation: mode-arrive .58s cubic-bezier(.16, 1, .3, 1) both; }
+.mode-output { position: relative; isolation: isolate; overflow: hidden; min-height: 350px; padding: 38px; border: 1px solid var(--line); background: #ffffff; border-radius: 12px; color: var(--ink); box-shadow: 0 18px 42px #1e3a8a10; }
 html[data-theme='dark'] .mode-output { color: #f5f7fb; box-shadow: 0 18px 42px #00000045; }
 html[data-theme='dark'] .mode-output[data-mode='build'] { border-color: #315eb7; background: #101c37; }
 html[data-theme='dark'] .mode-output[data-mode='explain'] { border-color: #277a86; background: #10292f; }
@@ -119,7 +119,8 @@ html[data-theme='dark'] .mode-signal, html[data-theme='dark'] .mode-output p { c
 html[data-theme='dark'] .mode-output small { color: #c7cad1; }
 @keyframes mode-arrive { from { opacity: 0; transform: translateY(22px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes mode-ripple { from { opacity: 0; transform: scale(.72); } to { opacity: 1; transform: scale(1); } }
-.off-clock { padding: 85px 0 95px; background: var(--surface); color: var(--ink); overflow: hidden; }
+.off-clock { padding: 85px 0 95px; background: #e8effa; color: var(--ink); overflow: hidden; }
+html[data-theme='dark'] .off-clock { background: #151a23; }
 .off-clock .section-label { color: var(--ink); }
 .off-clock .section-label .line { background: var(--line); }
 .off-clock-head { display: flex; align-items: end; justify-content: space-between; gap: 50px; margin: 50px 0; }
@@ -130,14 +131,14 @@ html[data-theme='dark'] .mode-output small { color: #c7cad1; }
 .off-clock-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 .off-clock-card { position: relative; min-height: 295px; padding: 27px; border: 1px solid var(--line); border-radius: 5px; background: #fffefa; transition: transform .25s ease; }
 .off-clock-card:nth-child(2), .off-clock-card:nth-child(3) { background: #fffefa; }
-.off-clock-card:hover { transform: translateY(-4px); border-color: #bfdbfe; background: #edf4ff; box-shadow: 0 10px 25px #1d4ed80d; }
-html[data-theme='dark'] .off-clock-card:hover { background: #1c2942; border-color: #5376bb; }
+.off-clock-card:hover { transform: translateY(-4px); border-color: #bfdbfe; box-shadow: 0 10px 25px #1d4ed80d; }
+html[data-theme='dark'] .off-clock-card:hover { border-color: #5376bb; }
 .off-clock-card svg { margin-bottom: 35px; width: 30px; height: 30px; }
 .off-clock-card > span { display: block; color: var(--muted); font-size: 10px; letter-spacing: .08em; }
 .off-clock-card h3 { font-size: 27px; letter-spacing: -.04em; font-weight: 500; margin: 13px 0; }
 .off-clock-card p { font-size: 15px; line-height: 1.6; color: var(--muted); margin: 0; }
-.about { background: var(--surface); width: 100%; max-width: none; margin: 0; padding: 85px max(32px, calc((100vw - 1180px) / 2)) 95px; }
-html[data-theme='dark'] .about { background: #090b0f; }
+.about { background: #eaf1ff; color: var(--ink); width: 100%; max-width: none; margin: 0; padding: 85px max(32px, calc((100vw - 1180px) / 2)) 95px; }
+html[data-theme='dark'] .about { background: #101525; color: #f5f7fb; }
 html[data-theme='dark'] .about h2, html[data-theme='dark'] .about-copy a { color: #f5f7fb; }
 html[data-theme='dark'] .socials a:hover, html[data-theme='dark'] .hero-bottom .text-link { color: #ffffff; }
 .about .section-label { color: var(--muted); }
@@ -226,7 +227,8 @@ html[data-theme='dark'] .about .section-label .line { background: #343b48; }
   .working-set { padding: 60px 0; }
   .working-set-grid, .about-grid, .notes-grid { grid-template-columns: 1fr; margin-top: 35px; gap: 32px; }
   .mode-controls > p { max-width: 100%; font-size: 27px; }
-  .mode-output { min-height: 0; padding: 26px; }
+  .mode-output { min-height: 0; padding: 26px; border-radius: 10px; }
+  .mode-buttons button { min-height: 54px; font-size: 14px; }
   .off-clock { padding: 60px 0; }
   .off-clock-head { display: block; margin: 35px 0; }
   .off-clock-head > p { margin-top: 25px; }
@@ -237,6 +239,10 @@ html[data-theme='dark'] .about .section-label .line { background: #343b48; }
   .note-card { padding-left: 0; border-left: 0; }
   .footer { display: block; padding: 60px 0 35px; }
   .footer-right { align-items: flex-start; margin-top: 35px; }
+}
+@media (hover: hover) {
+  .off-clock-card:hover { background: #edf4ff; }
+  html[data-theme='dark'] .off-clock-card:hover { background: #1c2942; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
