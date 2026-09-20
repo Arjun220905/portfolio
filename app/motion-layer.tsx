@@ -14,7 +14,7 @@ export function MotionLayer() {
 
     const updateProgress = () => {
       cancelAnimationFrame(frame);
-        frame = requestAnimationFrame(() => {
+      frame = requestAnimationFrame(() => {
           const distance = Math.max(1, root.scrollHeight - window.innerHeight);
           root.style.setProperty('--scroll-progress', String(window.scrollY / distance));
           root.style.setProperty('--hero-lift', `${Math.max(-24, -window.scrollY * .055)}px`);
@@ -27,6 +27,7 @@ export function MotionLayer() {
       animations.forEach(animation => animation.cancel());
       animations.clear();
       cancelAnimationFrame(frame);
+      cancelAnimationFrame(pointerFrame);
       if (preference.matches) return;
 
       updateProgress();
@@ -91,9 +92,17 @@ export function MotionLayer() {
             animations.add(headingAnimation);
             headingAnimation.onfinish = () => animations.delete(headingAnimation);
           });
+          entry.target.querySelectorAll('.principles > div, .article-links > a, .signal-strip > div').forEach((row, rowIndex) => {
+            const reveal = row.animate([
+              { opacity: 0, transform: 'translateX(-12px)' },
+              { opacity: 1, transform: 'translateX(0)' },
+            ], { duration: 460, delay: 100 + rowIndex * 75, fill: 'backwards', easing: 'cubic-bezier(.16, 1, .3, 1)' });
+            animations.add(reveal);
+            reveal.onfinish = () => animations.delete(reveal);
+          });
         });
       }, { threshold: 0.08 });
-        document.querySelectorAll('.section-label, .working-set-label, .section-intro, .project, .working-set-grid, .off-clock-head, .off-clock-card, .about-grid, .notes-grid, .footer').forEach(element => observer?.observe(element));
+      document.querySelectorAll('.section-label, .working-set-label, .section-intro, .signal-strip, .project, .working-set-grid, .off-clock-head, .off-clock-card, .about-grid, .notes-grid, .footer').forEach(element => observer?.observe(element));
     };
 
     configure();

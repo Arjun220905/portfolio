@@ -59,6 +59,14 @@ export function WorkingSet() {
                 aria-pressed={active.id === mode.id}
                 onClick={() => setActiveId(mode.id)}
               >
+                {active.id === mode.id && (
+                  <motion.i
+                    className="mode-highlight"
+                    layoutId="selected-work-mode"
+                    aria-hidden="true"
+                    transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 36 }}
+                  />
+                )}
                 <span>{mode.index}</span>
                 {mode.label}
               </button>

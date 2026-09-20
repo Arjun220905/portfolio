@@ -244,6 +244,39 @@ html[data-theme='dark'] .about .section-label .line { background: #343b48; }
   .off-clock-card:hover { background: #edf4ff; }
   html[data-theme='dark'] .off-clock-card:hover { background: #1c2942; }
 }
+/* Shared surfaces keep both themes coherent as interactions change colour. */
+:root { --card: #ffffff; --card-hover: #e6edff; --secondary-tint: #e2f3ee; --warm-tint: #fbefda; --on-accent: #ffffff; }
+html[data-theme='dark'] { --card: #191e28; --card-hover: #243653; --secondary-tint: #173b39; --warm-tint: #3c3022; --on-accent: #101b30; }
+.nav-links { color: var(--muted); }
+.project, .off-clock-card, .off-clock-card:nth-child(2), .off-clock-card:nth-child(3), html[data-theme='dark'] .project, html[data-theme='dark'] .off-clock-card { background: var(--card); }
+.off-clock-card { overflow: hidden; transition: background-color .35s ease, transform .35s cubic-bezier(.16,1,.3,1), border-color .35s ease, box-shadow .35s ease; }
+.off-clock-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .4s cubic-bezier(.16,1,.3,1); }
+.mode-buttons button { isolation: isolate; transition: color .25s ease, padding .3s ease, transform .2s ease; }
+.mode-highlight { position: absolute; inset: 5px 0; border-radius: 5px; background: var(--blush); z-index: -1; }
+.mode-output[data-mode='build'] { background: #edf2ff; border-color: #bcccf3; }
+.mode-output[data-mode='explain'] { background: var(--secondary-tint); border-color: #abd1c6; }
+.mode-output[data-mode='sidequests'] { background: var(--warm-tint); border-color: #e0cba1; }
+.principles strong { color: var(--ink); }
+.principles > div, .article-links a { transition: background-color .25s ease, padding .3s cubic-bezier(.16,1,.3,1); }
+.hero-bottom .text-link, html[data-theme='dark'] .hero-bottom .text-link { color: var(--on-accent); }
+html[data-theme='dark'] .hero-bottom .text-link:hover { background: #a6c1ff; }
+html[data-theme='dark'] .socials a:hover { color: var(--paper); }
+.hero h1 em.reveal-line { display: inline-block; }
+@media (hover: hover) {
+  .off-clock-card:hover, html[data-theme='dark'] .off-clock-card:hover { background: var(--card-hover); }
+  .off-clock-card:nth-child(2):hover, html[data-theme='dark'] .off-clock-card:nth-child(2):hover { background: var(--secondary-tint); }
+  .off-clock-card:nth-child(3):hover, html[data-theme='dark'] .off-clock-card:nth-child(3):hover { background: var(--warm-tint); }
+  .off-clock-card:hover::after { transform: scaleX(1); }
+  .principles > div:hover, .article-links a:hover { background: var(--blush); padding-left: 10px; }
+}
+@media (max-width: 700px) {
+  .theme-toggle { width: 44px; height: 44px; }
+  .project-signal { flex-wrap: wrap; }
+  .project-signal > span { flex: 1; min-width: 100px; }
+  .working-set-grid > *, .about-grid > *, .notes-grid > * { min-width: 0; }
+  .hero h1 { font-size: clamp(38px, 10.7vw, 70px); }
+  .nav-cta { padding-inline: 12px; }
+}
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
