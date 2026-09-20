@@ -70,16 +70,20 @@ export function MotionLayer() {
         entries.forEach(entry => {
           if (!entry.isIntersecting) return;
           observer?.unobserve(entry.target);
+          entry.target.classList.add('is-visible');
           // Animate only when reached; content stays readable if scripting fails.
+          const isLabel = entry.target.matches('.section-label, .working-set-label');
+          const isCard = entry.target.matches('.project, .off-clock-card');
+          const index = Array.from(entry.target.parentElement?.children ?? []).indexOf(entry.target);
           const animation = entry.target.animate([
-            { opacity: 0.25, transform: 'translateY(20px)' },
+            { opacity: isLabel ? 0.45 : 0.22, transform: `translateY(${isLabel ? 8 : isCard ? 18 : 14}px)` },
             { opacity: 1, transform: 'translateY(0)' },
-          ], { duration: 650, easing: 'cubic-bezier(.16, 1, .3, 1)' });
+          ], { duration: isLabel ? 380 : isCard ? 560 : 500, delay: isCard ? Math.max(0, index) * 65 : 0, easing: 'cubic-bezier(.16, 1, .3, 1)' });
           animations.add(animation);
           animation.onfinish = () => animations.delete(animation);
         });
       }, { threshold: 0.08 });
-      document.querySelectorAll('.section-intro, .project, .working-set-grid, .off-clock-head, .off-clock-card, .about-grid, .notes-grid, .footer').forEach(element => observer?.observe(element));
+        document.querySelectorAll('.section-label, .working-set-label, .section-intro, .project, .working-set-grid, .off-clock-head, .off-clock-card, .about-grid, .notes-grid, .footer').forEach(element => observer?.observe(element));
     };
 
     configure();
