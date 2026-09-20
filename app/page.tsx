@@ -7,6 +7,7 @@ import {
   Terminal,
 } from "lucide-react";
 import { MotionLayer } from "./motion-layer";
+import { ThemeToggle } from "./theme-toggle";
 import { WorkingSet } from "./working-set";
 
 const projects = [
@@ -55,14 +56,17 @@ export default function Home() {
           <a href="#about">About</a>
           <a href="#notes">Notes</a>
         </div>
-        <a
-          className="nav-cta"
-          href="https://www.linkedin.com/in/arjun-m-39b317290/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Let&apos;s talk <ArrowUpRight size={15} />
-        </a>
+        <div className="nav-actions">
+          <ThemeToggle />
+          <a
+            className="nav-cta"
+            href="https://www.linkedin.com/in/arjun-m-39b317290/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Let&apos;s talk <ArrowUpRight size={15} />
+          </a>
+        </div>
       </nav>
       <section id="top" className="hero shell">
         <div className="hero-orbit" aria-hidden="true">
