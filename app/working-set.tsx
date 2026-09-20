@@ -6,6 +6,7 @@ const modes = [
   {
     id: "build",
     label: "Build systems",
+    index: "01",
     signal: "BUILDING SYSTEMS",
     title: "Build things people can run.",
     text: "Turning meeting APIs, webhooks, and agent workflows into useful starting points for developers.",
@@ -14,6 +15,7 @@ const modes = [
   {
     id: "explain",
     label: "Explain systems",
+    index: "02",
     signal: "EXPLAINING SYSTEMS",
     title: "Give the work some context.",
     text: "Writing demos, guides, and notes that make an integration easier to understand and use.",
@@ -22,6 +24,7 @@ const modes = [
   {
     id: "sidequests",
     label: "Side quests",
+    index: "03",
     signal: "FOLLOWING CURIOSITY",
     title: "Keep an extra tab open",
     text: "Movies, music, puzzles, and the urge to figure out how the magic trick works. It keeps the work interesting and gives us something to talk about.",
@@ -54,6 +57,7 @@ export function WorkingSet() {
                 aria-pressed={active.id === mode.id}
                 onClick={() => setActiveId(mode.id)}
               >
+                <span>{mode.index}</span>
                 {mode.label}
               </button>
             ))}
@@ -61,6 +65,7 @@ export function WorkingSet() {
         </div>
         <div
           className="mode-output"
+          data-mode={active.id}
           key={active.id}
           aria-live="polite"
         >
