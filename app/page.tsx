@@ -65,13 +65,18 @@ export default function Home() {
         </a>
       </nav>
       <section id="top" className="hero shell">
+        <div className="hero-orbit" aria-hidden="true">
+          <span />
+          <span />
+          <i />
+        </div>
         <div className="hero-kicker">
           <span className="pulse" /> DEVELOPER RELATIONS × BACKEND SYSTEMS
         </div>
         <h1>
-          Building things.
+          <span className="reveal-line">Building things.</span>
           <br />
-          <em>Making sense of them.</em>
+          <em className="reveal-line">Making sense of them.</em>
         </h1>
         <div className="hero-bottom">
           <p>

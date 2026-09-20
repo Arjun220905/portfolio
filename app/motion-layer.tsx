@@ -14,9 +14,10 @@ export function MotionLayer() {
 
     const updateProgress = () => {
       cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const distance = Math.max(1, root.scrollHeight - window.innerHeight);
-        root.style.setProperty('--scroll-progress', String(window.scrollY / distance));
+        frame = requestAnimationFrame(() => {
+          const distance = Math.max(1, root.scrollHeight - window.innerHeight);
+          root.style.setProperty('--scroll-progress', String(window.scrollY / distance));
+          root.style.setProperty('--hero-lift', `${Math.max(-24, -window.scrollY * .055)}px`);
       });
     };
 
@@ -81,6 +82,15 @@ export function MotionLayer() {
           ], { duration: isLabel ? 380 : isCard ? 560 : 500, delay: isCard ? Math.max(0, index) * 65 : 0, easing: 'cubic-bezier(.16, 1, .3, 1)' });
           animations.add(animation);
           animation.onfinish = () => animations.delete(animation);
+
+          entry.target.querySelectorAll<HTMLElement>('h2, h3').forEach((heading, headingIndex) => {
+            const headingAnimation = heading.animate([
+              { opacity: 0.3, transform: 'translateY(18px)', clipPath: 'inset(0 0 100% 0)' },
+              { opacity: 1, transform: 'translateY(0)', clipPath: 'inset(0 0 0 0)' },
+            ], { duration: 620, delay: 120 + headingIndex * 70, easing: 'cubic-bezier(.16, 1, .3, 1)' });
+            animations.add(headingAnimation);
+            headingAnimation.onfinish = () => animations.delete(headingAnimation);
+          });
         });
       }, { threshold: 0.08 });
         document.querySelectorAll('.section-label, .working-set-label, .section-intro, .project, .working-set-grid, .off-clock-head, .off-clock-card, .about-grid, .notes-grid, .footer').forEach(element => observer?.observe(element));
@@ -98,6 +108,7 @@ export function MotionLayer() {
       root.style.removeProperty('--scroll-progress');
       root.style.removeProperty('--pointer-offset-x');
       root.style.removeProperty('--pointer-offset-y');
+      root.style.removeProperty('--hero-lift');
     };
   }, []);
 
