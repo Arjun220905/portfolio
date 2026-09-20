@@ -63,7 +63,12 @@ export function WorkingSet() {
             ))}
           </div>
         </div>
-        <div className="mode-output" key={active.id} aria-live="polite">
+        <div
+          className="mode-output"
+          data-index={active.index}
+          key={active.id}
+          aria-live="polite"
+        >
           <div className="mode-signal">
             <i />
             <span>{active.signal}</span>
