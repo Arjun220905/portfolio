@@ -261,14 +261,15 @@ html[data-theme='dark'] { --card: #191e28; --card-hover: #243653; --secondary-ti
 .hero-bottom .text-link, html[data-theme='dark'] .hero-bottom .text-link { color: var(--on-accent); }
 html[data-theme='dark'] .hero-bottom .text-link:hover { background: #a6c1ff; }
 html[data-theme='dark'] .socials a:hover { color: var(--paper); }
-.hero h1 em.reveal-line { display: inline-block; }
+.hero h1 em.reveal-line { display: inline-block; line-height: 1.12; padding-bottom: .06em; margin-bottom: -.06em; }
 @media (hover: hover) {
   .off-clock-card:hover, html[data-theme='dark'] .off-clock-card:hover { background: var(--card-hover); }
-  .off-clock-card:nth-child(2):hover, html[data-theme='dark'] .off-clock-card:nth-child(2):hover { background: var(--secondary-tint); }
-  .off-clock-card:nth-child(3):hover, html[data-theme='dark'] .off-clock-card:nth-child(3):hover { background: var(--warm-tint); }
+  .off-clock-card:nth-child(2):hover, html[data-theme='dark'] .off-clock-card:nth-child(2):hover,
+  .off-clock-card:nth-child(3):hover, html[data-theme='dark'] .off-clock-card:nth-child(3):hover { background: var(--card-hover); }
   .off-clock-card:hover::after { transform: scaleX(1); }
   .principles > div:hover, .article-links a:hover { background: var(--blush); padding-left: 10px; }
 }
+.article-links a svg, .note-card > svg { color: var(--accent); }
 @media (max-width: 700px) {
   .theme-toggle { width: 44px; height: 44px; }
   .project-signal { flex-wrap: wrap; }
