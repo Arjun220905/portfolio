@@ -7,8 +7,10 @@ export function MotionLayer() {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
     const root = document.documentElement;
     let frame = 0;
+    let pointerFrame = 0;
     let observer: IntersectionObserver | undefined;
     const animations = new Set<Animation>();
+    const cleanup: Array<() => void> = [];
 
     const updateProgress = () => {
       cancelAnimationFrame(frame);
@@ -19,17 +21,51 @@ export function MotionLayer() {
     };
 
     const configure = () => {
+      cleanup.splice(0).forEach(remove => remove());
       observer?.disconnect();
       animations.forEach(animation => animation.cancel());
       animations.clear();
-      window.removeEventListener('scroll', updateProgress);
-      window.removeEventListener('resize', updateProgress);
       cancelAnimationFrame(frame);
       if (preference.matches) return;
 
       updateProgress();
       window.addEventListener('scroll', updateProgress, { passive: true });
       window.addEventListener('resize', updateProgress, { passive: true });
+      cleanup.push(() => {
+        window.removeEventListener('scroll', updateProgress);
+        window.removeEventListener('resize', updateProgress);
+      });
+
+      if (window.matchMedia('(pointer: fine)').matches) {
+        const moveAmbient = (event: PointerEvent) => {
+          cancelAnimationFrame(pointerFrame);
+          pointerFrame = requestAnimationFrame(() => {
+            root.style.setProperty('--pointer-offset-x', `${((event.clientX / window.innerWidth) - 0.5) * 8}%`);
+            root.style.setProperty('--pointer-offset-y', `${((event.clientY / window.innerHeight) - 0.5) * 8}%`);
+          });
+        };
+        window.addEventListener('pointermove', moveAmbient, { passive: true });
+        cleanup.push(() => window.removeEventListener('pointermove', moveAmbient));
+
+        document.querySelectorAll<HTMLElement>('.project').forEach(project => {
+          const tilt = (event: PointerEvent) => {
+            const bounds = project.getBoundingClientRect();
+            const x = (event.clientX - bounds.left) / bounds.width;
+            const y = (event.clientY - bounds.top) / bounds.height;
+            project.style.setProperty('--shine-x', `${x * 100}%`);
+            project.style.setProperty('--shine-y', `${y * 100}%`);
+            project.style.transform = `translateY(-4px) rotateX(${(0.5 - y) * 1.25}deg) rotateY(${(x - 0.5) * 1.25}deg)`;
+          };
+          const resetTilt = () => { project.style.removeProperty('transform'); };
+          project.addEventListener('pointermove', tilt);
+          project.addEventListener('pointerleave', resetTilt);
+          cleanup.push(() => {
+            project.removeEventListener('pointermove', tilt);
+            project.removeEventListener('pointerleave', resetTilt);
+            resetTilt();
+          });
+        });
+      }
       observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
           if (!entry.isIntersecting) return;
@@ -52,10 +88,12 @@ export function MotionLayer() {
       observer?.disconnect();
       animations.forEach(animation => animation.cancel());
       cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', updateProgress);
-      window.removeEventListener('resize', updateProgress);
+      cancelAnimationFrame(pointerFrame);
+      cleanup.splice(0).forEach(remove => remove());
       preference.removeEventListener('change', configure);
       root.style.removeProperty('--scroll-progress');
+      root.style.removeProperty('--pointer-offset-x');
+      root.style.removeProperty('--pointer-offset-y');
     };
   }, []);
 
