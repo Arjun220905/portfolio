@@ -360,7 +360,7 @@ export default function Home() {
               in
             </a>
             <a
-              href="https://x.com/arjunnn2209"
+              href="https://x.com/arjunlarps"
               target="_blank"
               rel="noreferrer"
               aria-label="X"
