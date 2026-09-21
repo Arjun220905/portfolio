@@ -41,7 +41,7 @@ html[data-theme='dark'] .hero::after { background: radial-gradient(ellipse at ca
 .hero-kicker { grid-column: 1; color: var(--muted); font-size: 11px; letter-spacing: .1em; line-height: 1.6; }
 .pulse { width: 7px; height: 7px; flex-shrink: 0; background: var(--accent); box-shadow: 0 0 0 4px var(--blush); }
 .hero h1 { grid-column: 1; font-size: clamp(48px, 6.5vw, 90px); line-height: 1.02; letter-spacing: -.06em; margin: 28px 0 30px; font-weight: 500; }
-.reveal-line { display: inline-block; }
+.reveal-line { display: inline-block; line-height: 1.12; padding-bottom: .06em; margin-bottom: -.06em; }
 .hero-orbit { position: absolute; right: clamp(8px, 9vw, 120px); bottom: 18px; width: clamp(125px, 15vw, 210px); aspect-ratio: 1; z-index: -1; opacity: .78; pointer-events: none; transform: translate3d(0, var(--hero-lift), 0); transition: transform .15s linear; }
 .hero-orbit span { position: absolute; inset: 0; border: 1px solid #2563eb40; border-radius: 50%; animation: orbit-spin 16s linear infinite; }
 .hero-orbit span:nth-child(2) { inset: 20%; border-style: dashed; border-color: #2563eb60; animation-direction: reverse; animation-duration: 10s; }
@@ -264,7 +264,6 @@ html[data-theme='dark'] .mode-output[data-mode='build'], html[data-theme='dark']
 .hero-bottom .text-link, html[data-theme='dark'] .hero-bottom .text-link { color: var(--on-accent); }
 html[data-theme='dark'] .hero-bottom .text-link:hover { background: #a6c1ff; }
 html[data-theme='dark'] .socials a:hover { color: var(--paper); }
-.hero h1 em.reveal-line { display: inline-block; line-height: 1.12; padding-bottom: .06em; margin-bottom: -.06em; }
 @media (hover: hover) {
   .off-clock-card:hover, html[data-theme='dark'] .off-clock-card:hover { background: var(--card-hover); }
   .off-clock-card:nth-child(2):hover, html[data-theme='dark'] .off-clock-card:nth-child(2):hover,
