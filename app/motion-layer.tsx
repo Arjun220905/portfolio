@@ -92,7 +92,7 @@ export function MotionLayer() {
             animations.add(headingAnimation);
             headingAnimation.onfinish = () => animations.delete(headingAnimation);
           });
-          entry.target.querySelectorAll('.principles > div, .article-links > a, .signal-strip > div').forEach((row, rowIndex) => {
+          entry.target.querySelectorAll('.principles > div, .article-links > a, .signal-strip > div, .project-copy > p, .project-meta, .project-signal').forEach((row, rowIndex) => {
             const reveal = row.animate([
               { opacity: 0, transform: 'translateX(-12px)' },
               { opacity: 1, transform: 'translateX(0)' },

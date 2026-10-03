@@ -9,6 +9,7 @@ import {
 import { MotionLayer } from "./motion-layer";
 import { ThemeToggle } from "./theme-toggle";
 import { WorkingSet } from "./working-set";
+import { HeroAtmosphere } from "./hero-atmosphere";
 
 const projects = [
   {
@@ -69,11 +70,7 @@ export default function Home() {
         </div>
       </nav>
       <section id="top" className="hero shell">
-        <div className="hero-orbit" aria-hidden="true">
-          <span />
-          <span />
-          <i />
-        </div>
+        <HeroAtmosphere />
         <div className="hero-kicker">
           <span className="pulse" /> DEVELOPER RELATIONS × BACKEND SYSTEMS
         </div>
