@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { motion, useMotionValue, useReducedMotion, useSpring, useScroll, useTransform, useInView } from 'motion/react';
 
-/** Decorative light study: pointer and scroll motion never change the text layout. */
+/** Pointer-driven gradient field, inspired by the reference's fluid hero behavior. */
 export function HeroAtmosphere() {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
@@ -14,7 +14,8 @@ export function HeroAtmosphere() {
   const y = useSpring(pointerY, { stiffness: 70, damping: 24 });
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const lift = useTransform(scrollYProgress, [0, 1], [0, -65]);
-  const rotate = useTransform(scrollYProgress, [0, 1], [-18, 12]);
+  const counterX = useTransform(x, [-80, 80], [35, -35]);
+  const counterY = useTransform(y, [-60, 60], [25, -25]);
 
   useEffect(() => {
     const hero = ref.current?.closest('.hero');
@@ -22,8 +23,8 @@ export function HeroAtmosphere() {
     const move = (event: Event) => {
       const pointer = event as PointerEvent;
       const bounds = hero.getBoundingClientRect();
-      pointerX.set(((pointer.clientX - bounds.left) / bounds.width - 0.5) * 36);
-      pointerY.set(((pointer.clientY - bounds.top) / bounds.height - 0.5) * 28);
+      pointerX.set(((pointer.clientX - bounds.left) / bounds.width - 0.5) * 160);
+      pointerY.set(((pointer.clientY - bounds.top) / bounds.height - 0.5) * 120);
     };
     const reset = () => { pointerX.set(0); pointerY.set(0); };
     hero.addEventListener('pointermove', move, { passive: true });
@@ -36,15 +37,15 @@ export function HeroAtmosphere() {
 
   return (
     <div ref={ref} className="hero-atmosphere" data-visible={visible} aria-hidden="true">
-      <motion.div className="atmosphere-parallax" style={reduced ? undefined : { y: lift, rotate }}>
-        <motion.div className="light-sculpture" style={reduced ? undefined : { x, y }}
-          initial={false} animate={reduced ? undefined : { opacity: [0, 1], scale: [0.86, 1] }}
-          transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1] }}>
-          <div className="light-core" />
-          <div className="light-contour contour-one" />
-          <div className="light-contour contour-two" />
-          <div className="light-contour contour-three" />
-          <div className="light-axis" />
+      <motion.div className="fluid-field" style={reduced ? undefined : { y: lift }}>
+        <motion.div className="fluid-current current-primary" style={reduced ? undefined : { x, y }}>
+          <div className="fluid-color" />
+        </motion.div>
+        <motion.div className="fluid-current current-secondary" style={reduced ? undefined : { x: counterX, y: counterY }}>
+          <div className="fluid-color" />
+        </motion.div>
+        <motion.div className="fluid-current current-highlight" style={reduced ? undefined : { x, y: counterY }}>
+          <div className="fluid-color" />
         </motion.div>
       </motion.div>
     </div>
