@@ -48,7 +48,6 @@ export default function Home() {
       <div className="scroll-progress" aria-hidden="true" />
       <nav className="nav shell" aria-label="Primary navigation">
         <a className="wordmark" href="#top" aria-label="Arjun M home">
-          <span>A</span>
           <i>Arjun M</i>
         </a>
         <div className="nav-links">
