@@ -83,6 +83,7 @@ export function WorkingSet() {
                 onClick={() => setActiveId(mode.id)}
                 whileHover={reduceMotion ? undefined : { x: 4 }}
                 whileTap={reduceMotion ? undefined : { scale: 0.985 }}
+                transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
               >
                 {active.id === mode.id && (
                   <motion.i
@@ -117,11 +118,14 @@ export function WorkingSet() {
             exit={
               reduceMotion
                 ? { opacity: 0 }
-                : { opacity: 0, y: -10, scale: 0.99 }
+                : { opacity: 0, y: 18, scale: 0.985 }
             }
             transition={{
               duration: reduceMotion ? 0.18 : 0.36,
               ease: [0.16, 1, 0.3, 1],
+              opacity: { duration: 0.16 },
+              y: { type: 'spring', bounce: 0, duration: 0.32 },
+              scale: { type: 'spring', bounce: 0, duration: 0.32 },
             }}
           >
             <motion.div

@@ -74,3 +74,52 @@ html[data-theme='dark'] .about { background: linear-gradient(135deg, #131e27, #2
   .hero h1 .reveal-line { clip-path: none; }
   .hero-bottom .text-link:hover, .off-clock-card:hover svg { transform: none; }
 }
+
+/* Apple-inspired hierarchy: one floating toolbar, solid content surfaces. */
+.nav {
+  position: sticky; top: 12px; z-index: 30;
+  height: 72px; margin: 12px auto 0; padding: 0 20px;
+  border: 1px solid #dce3eacc; border-radius: 18px;
+  background: #fafafae8; backdrop-filter: blur(20px) saturate(130%);
+  box-shadow: 0 8px 28px #324e6310, inset 0 1px 0 #ffffffa6;
+}
+html[data-theme='dark'] .nav { background: #181e26e8; border-color: #39434f99; box-shadow: 0 8px 28px #050c1833, inset 0 1px 0 #ffffff0a; }
+.nav-links { gap: 24px; }
+.nav-links a { padding-inline: 8px; border-radius: 8px; transition: background-color .18s, color .18s; }
+.nav-links a:hover { background: var(--blush); }
+.nav-links a::after { left: 8px; right: 8px; }
+.nav-cta { border-radius: 12px; font-weight: 600; }
+.wordmark span { border-radius: 10px; }
+.theme-toggle { border-radius: 12px; }
+.theme-toggle span { display: grid; place-items: center; }
+.theme-toggle:hover, .theme-toggle:active { transform: none; }
+.hero { padding-top: 76px; }
+.section, .working-set, .off-clock { scroll-margin-top: 108px; }
+.hero { scroll-margin-top: 96px; }
+.hero h1 { letter-spacing: -.05em; }
+.hero-bottom .text-link { border-radius: 12px; }
+.project, .off-clock-card { border-radius: 16px; }
+.project-signal { border-radius: 10px; }
+.mode-output { border-radius: 18px; }
+.mode-highlight { border-radius: 10px; }
+.mode-buttons button { padding-right: 42px; }
+.project, .off-clock-card { box-shadow: 0 2px 5px #324e6305, 0 12px 28px #324e6306; }
+html[data-theme='dark'] .project, html[data-theme='dark'] .off-clock-card { border-color: #333d49; box-shadow: 0 2px 6px #00000015; }
+.nav-cta:active, .text-link:active, .socials a:active { transform: scale(.97); transition-duration: 80ms; }
+a:focus-visible, button:focus-visible { outline-width: 3px; outline-offset: 4px; }
+@media (max-width: 700px) {
+  .nav { width: calc(100% - 24px); top: 8px; height: 64px; margin-top: 8px; padding-inline: 12px; border-radius: 16px; }
+  .wordmark { gap: 8px; font-size: 15px; }
+  .wordmark span { width: 34px; height: 34px; }
+  .hero { padding-top: 46px; }
+  .nav-cta { padding-inline: 12px; }
+  .nav-actions { gap: 6px; }
+  .section, .working-set, .off-clock { scroll-margin-top: 88px; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .nav, html[data-theme='dark'] .nav { background: var(--paper); backdrop-filter: none; }
+}
+@media (prefers-contrast: more) {
+  .nav, html[data-theme='dark'] .nav { background: var(--paper); backdrop-filter: none; border-color: var(--ink); }
+  .project, .off-clock-card, .mode-output[data-mode], html[data-theme='dark'] .mode-output[data-mode] { border-color: var(--muted); }
+}
