@@ -4,7 +4,6 @@ import { useState } from 'react';
 import {
   AnimatePresence,
   motion,
-  stagger,
   useReducedMotion,
   type Variants,
 } from 'motion/react';
@@ -44,7 +43,7 @@ const outputContent: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { delayChildren: stagger(0.055, { startDelay: 0.08 }) },
+    transition: { delayChildren: 0.08, staggerChildren: 0.055 },
   },
 };
 
