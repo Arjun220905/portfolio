@@ -1,28 +1,31 @@
 'use client';
 
 import { Moon, Sun } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
 type Theme = 'light' | 'dark';
 
 const storageKey = 'arjun-portfolio-theme';
 
-export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>('light');
-  const reduced = useReducedMotion();
+function subscribeTheme(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  return () => observer.disconnect();
+}
 
-  useEffect(() => {
-    const saved = window.localStorage.getItem(storageKey) as Theme | null;
-    const resolved = saved ?? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    setTheme(resolved);
-  }, []);
+function getTheme(): Theme {
+  return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+}
+
+export function ThemeToggle() {
+  const theme = useSyncExternalStore(subscribeTheme, getTheme, () => 'light' as Theme);
+  const reduced = useReducedMotion();
 
   const toggle = () => {
     const next: Theme = theme === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
-    window.localStorage.setItem(storageKey, next);
-    setTheme(next);
+    try { window.localStorage.setItem(storageKey, next); } catch { /* Theme still works when storage is unavailable. */ }
   };
 
   const isDark = theme === 'dark';
