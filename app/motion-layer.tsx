@@ -7,7 +7,6 @@ export function MotionLayer() {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
     const root = document.documentElement;
     let frame = 0;
-    let pointerFrame = 0;
     let observer: IntersectionObserver | undefined;
     const animations = new Set<Animation>();
     const cleanup: Array<() => void> = [];
@@ -17,7 +16,6 @@ export function MotionLayer() {
       frame = requestAnimationFrame(() => {
           const distance = Math.max(1, root.scrollHeight - window.innerHeight);
           root.style.setProperty('--scroll-progress', String(window.scrollY / distance));
-          root.style.setProperty('--hero-lift', `${Math.max(-24, -window.scrollY * .055)}px`);
       });
     };
 
@@ -27,7 +25,6 @@ export function MotionLayer() {
       animations.forEach(animation => animation.cancel());
       animations.clear();
       cancelAnimationFrame(frame);
-      cancelAnimationFrame(pointerFrame);
       if (preference.matches) return;
 
       updateProgress();
@@ -39,30 +36,27 @@ export function MotionLayer() {
       });
 
       if (window.matchMedia('(pointer: fine)').matches) {
-        const moveAmbient = (event: PointerEvent) => {
-          cancelAnimationFrame(pointerFrame);
-          pointerFrame = requestAnimationFrame(() => {
-            root.style.setProperty('--pointer-offset-x', `${((event.clientX / window.innerWidth) - 0.5) * 8}%`);
-            root.style.setProperty('--pointer-offset-y', `${((event.clientY / window.innerHeight) - 0.5) * 8}%`);
-          });
-        };
-        window.addEventListener('pointermove', moveAmbient, { passive: true });
-        cleanup.push(() => window.removeEventListener('pointermove', moveAmbient));
-
         document.querySelectorAll<HTMLElement>('.project').forEach(project => {
+          let bounds: DOMRect;
+          let shineFrame = 0;
+          const measure = () => { bounds = project.getBoundingClientRect(); };
           const tilt = (event: PointerEvent) => {
-            const bounds = project.getBoundingClientRect();
+            if (!bounds) return;
             const x = (event.clientX - bounds.left) / bounds.width;
             const y = (event.clientY - bounds.top) / bounds.height;
-            project.style.setProperty('--shine-x', `${x * 100}%`);
-            project.style.setProperty('--shine-y', `${y * 100}%`);
-            project.style.transform = `translateY(-4px) rotateX(${(0.5 - y) * 1.25}deg) rotateY(${(x - 0.5) * 1.25}deg)`;
+            cancelAnimationFrame(shineFrame);
+            shineFrame = requestAnimationFrame(() => {
+              project.style.setProperty('--shine-x', `${x * 100}%`);
+              project.style.setProperty('--shine-y', `${y * 100}%`);
+            });
           };
-          const resetTilt = () => { project.style.removeProperty('transform'); };
+          const resetTilt = () => { cancelAnimationFrame(shineFrame); };
+          project.addEventListener('pointerenter', measure);
           project.addEventListener('pointermove', tilt);
           project.addEventListener('pointerleave', resetTilt);
           cleanup.push(() => {
             project.removeEventListener('pointermove', tilt);
+            project.removeEventListener('pointerenter', measure);
             project.removeEventListener('pointerleave', resetTilt);
             resetTilt();
           });
@@ -84,25 +78,9 @@ export function MotionLayer() {
           animations.add(animation);
           animation.onfinish = () => animations.delete(animation);
 
-          entry.target.querySelectorAll<HTMLElement>('h2, h3').forEach((heading, headingIndex) => {
-            const headingAnimation = heading.animate([
-              { opacity: 0.3, transform: 'translateY(18px)', clipPath: 'inset(0 0 100% 0)' },
-              { opacity: 1, transform: 'translateY(0)', clipPath: 'inset(0 0 0 0)' },
-            ], { duration: 620, delay: 120 + headingIndex * 70, easing: 'cubic-bezier(.16, 1, .3, 1)' });
-            animations.add(headingAnimation);
-            headingAnimation.onfinish = () => animations.delete(headingAnimation);
-          });
-          entry.target.querySelectorAll('.principles > div, .article-links > a, .signal-strip > div, .project-copy > p, .project-meta, .project-signal').forEach((row, rowIndex) => {
-            const reveal = row.animate([
-              { opacity: 0, transform: 'translateX(-12px)' },
-              { opacity: 1, transform: 'translateX(0)' },
-            ], { duration: 460, delay: 100 + rowIndex * 75, fill: 'backwards', easing: 'cubic-bezier(.16, 1, .3, 1)' });
-            animations.add(reveal);
-            reveal.onfinish = () => animations.delete(reveal);
-          });
         });
       }, { threshold: 0.08 });
-      document.querySelectorAll('.section-label, .working-set-label, .section-intro, .signal-strip, .project, .working-set-grid, .off-clock-head, .off-clock-card, .about-grid, .notes-grid, .footer').forEach(element => observer?.observe(element));
+      document.querySelectorAll('.project-list, .working-set-grid, .off-clock-head, .off-clock-grid, .notes-grid, .footer').forEach(element => observer?.observe(element));
     };
 
     configure();
@@ -111,7 +89,6 @@ export function MotionLayer() {
       observer?.disconnect();
       animations.forEach(animation => animation.cancel());
       cancelAnimationFrame(frame);
-      cancelAnimationFrame(pointerFrame);
       cleanup.splice(0).forEach(remove => remove());
       preference.removeEventListener('change', configure);
       root.style.removeProperty('--scroll-progress');
