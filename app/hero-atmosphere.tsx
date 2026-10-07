@@ -48,11 +48,6 @@ export function HeroAtmosphere() {
           <div className="fluid-color" />
         </motion.div>
       </motion.div>
-      <motion.div className="light-lens" style={reduced ? undefined : { x: counterX, y }}>
-        <div className="lens-ring lens-ring-outer" />
-        <div className="lens-ring lens-ring-inner" />
-        <div className="lens-core" />
-      </motion.div>
     </div>
   );
 }

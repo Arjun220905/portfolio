@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
-import './refracted.css';
+import './globals.css';
+import './subtle.css';
+import './cinematic.css';
 
 export const metadata: Metadata = { title: 'Arjun M — Developer Relations × Backend Systems', description: 'Arjun M builds practical infrastructure and developer experiences around APIs, AI workflows, and real-time systems.' };
 
