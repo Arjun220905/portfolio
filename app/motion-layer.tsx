@@ -102,6 +102,30 @@ export function MotionLayer() {
           const isLabel = entry.target.matches('.section-label, .working-set-label');
           const isCard = entry.target.matches('.project, .off-clock-card');
           const index = Array.from(entry.target.parentElement?.children ?? []).indexOf(entry.target);
+          const isProject = entry.target.matches('.project');
+          const isHobby = entry.target.matches('.off-clock-card');
+          const isOutsideHeading = entry.target.matches('.off-clock-head');
+          if (isProject || isHobby || isOutsideHeading) {
+            const mobile = window.matchMedia('(max-width: 700px)').matches;
+            const distance = mobile ? 42 : 76;
+            const rotation = isHobby && !mobile ? (index - 1) * 2.5 : 0;
+            const start = isOutsideHeading
+              ? `translateX(${mobile ? -24 : -56}px)`
+              : `translateY(${distance}px) scale(${isProject ? .95 : .92}) rotate(${rotation}deg)`;
+            const arrival = entry.target.animate([
+              { opacity: 0, transform: start },
+              { opacity: 1, transform: 'translate(0, 0) scale(1) rotate(0deg)' },
+            ], {
+              duration: isOutsideHeading ? 1100 : 950,
+              delay: isHobby && !mobile ? index * 150 : 0,
+              easing: 'cubic-bezier(.16, 1, .3, 1)',
+              fill: 'backwards',
+            });
+            animations.add(arrival);
+            arrival.onfinish = () => animations.delete(arrival);
+            // One coordinated card entrance avoids competing nested transforms.
+            return;
+          }
           const animation = entry.target.animate([
             { opacity: isLabel ? 0.45 : 0.22, transform: `translateY(${isLabel ? 8 : isCard ? 18 : 14}px)` },
             { opacity: 1, transform: 'translateY(0)' },
@@ -126,7 +150,7 @@ export function MotionLayer() {
             reveal.onfinish = () => animations.delete(reveal);
           });
         });
-      }, { threshold: 0.08 });
+      }, { threshold: 0.18 });
       document.querySelectorAll('.section-label, .working-set-label, .section-intro, .signal-strip, .project, .working-set-grid, .off-clock-head, .off-clock-card, .about-grid, .notes-grid, .footer').forEach(element => observer?.observe(element));
     };
 
