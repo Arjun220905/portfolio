@@ -1,35 +1,41 @@
 'use client';
 
-import { useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { ArrowDown, ArrowUpRight, Film, Music2, Puzzle, Plus, Sun, Moon } from 'lucide-react';
+import { useRef, useState, useSyncExternalStore, type CSSProperties, type PointerEvent, type ReactNode } from 'react';
+import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
+import { ArrowUpRight, ArrowRight, Film, Music2, Puzzle, Sun, Moon, Braces, MessageSquare, Sparkles } from 'lucide-react';
 import { interests, modes, projects } from './content';
 import s from './portfolio.module.css';
 
-const spring = { type: 'spring' as const, bounce: 0.12, duration: 0.55 };
+const spring = { type: 'spring' as const, bounce: 0.18, duration: 0.7 };
+const mobileQuery = '(max-width: 767px)';
+function subscribeMobile(notify: () => void) {
+  const query = window.matchMedia(mobileQuery);
+  query.addEventListener('change', notify);
+  return () => query.removeEventListener('change', notify);
+}
+const getMobile = () => window.matchMedia(mobileQuery).matches;
+const getServerMobile = () => false;
 
-// Intersection state lives on a stable wrapper, not the moving child.
-// A zero threshold resets only once the wrapper has fully left the viewport.
 export function Reveal({ children, className = '' }: { children: ReactNode; className?: string }) {
   const reduced = useReducedMotion();
   return <motion.div className={className} initial="rest" whileInView="visible" viewport={{ once: false, amount: 0 }}>
     <motion.div className={s.revealInner} variants={{
-      rest: { opacity: 1, transform: reduced ? 'none' : 'translateY(var(--reveal-offset))' },
-      visible: { opacity: 1, transform: 'translateY(0px)' },
+      rest: { transform: reduced ? 'none' : 'translateY(var(--reveal-distance)) rotate(2deg)' },
+      visible: { transform: 'translateY(0px) rotate(0deg)' },
     }} transition={reduced ? { duration: 0 } : spring}>{children}</motion.div>
   </motion.div>;
 }
 
 export function HeroTitle() {
   const reduced = useReducedMotion();
-  return <h1 className={s.headline}>
-    {['Building things.', 'Making sense of them.'].map((line, index) => <motion.span
-      className={index ? s.accentLine : s.titleLine} key={line}
-      initial={false} animate={reduced ? undefined : { transform: ['translateY(24px)', 'translateY(0px)'], opacity: [0, 1] }}
-      transition={{ duration: 0.8, delay: index * 0.14, ease: [0.16, 1, 0.3, 1] }}>
-      {line.split(' ').map((word) => <motion.span key={word} className={s.word}
-        whileHover={reduced ? undefined : { y: -6, rotate: -1.5 }} transition={spring}>{word}{' '}</motion.span>)}
-    </motion.span>)}
+  return <h1 className={s.headline} aria-label="Building things. Making sense of them.">
+    <span className={s.building} aria-hidden="true">{['Building', 'things.'].map((word, i) => <motion.span key={word}
+      initial={false} animate={reduced ? undefined : { transform: ['translateY(75px) rotate(6deg)', 'translateY(0px) rotate(0deg)'], opacity: [0, 1] }}
+      transition={{ duration: 1, delay: i * 0.16, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={reduced ? undefined : { x: 14, rotate: -2 }}>{word}{i === 0 ? ' ' : ''}</motion.span>)}</span>
+    <motion.span className={s.making} aria-hidden="true" initial={false}
+      animate={reduced ? undefined : { transform: ['translateX(-35px)', 'translateX(0px)'], opacity: [0, 1] }}
+      transition={{ duration: 0.8, delay: 0.3 }}>Making sense of them.</motion.span>
   </h1>;
 }
 
@@ -37,87 +43,96 @@ export function ColorMode() {
   return <button type="button" className={s.themeButton} aria-label="Toggle light and dark mode" onClick={() => {
     const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
-    try { localStorage.setItem('arjun-portfolio-theme', next); } catch { /* Theme still works without storage. */ }
+    try { localStorage.setItem('arjun-portfolio-theme', next); } catch { /* Storage is optional. */ }
   }}><Sun className={s.sun} size={19} /><Moon className={s.moon} size={19} /></button>;
 }
+
+const modeIcons = [Braces, MessageSquare, Sparkles];
 
 export function WorkModes() {
   const [active, setActive] = useState(0);
   const reduced = useReducedMotion();
-  const current = modes[active];
+  const mobile = useSyncExternalStore(subscribeMobile, getMobile, getServerMobile);
+  const controls = useRef<Array<HTMLButtonElement | null>>([]);
+  function nextMode() {
+    const next = (active + 1) % modes.length;
+    setActive(next);
+    controls.current[next]?.focus({ preventScroll: true });
+  }
   return <div className={s.modes}>
-    <div className={s.modeButtons} aria-label="How I tend to work">
-      {modes.map((mode, i) => <button type="button" key={mode.label} aria-pressed={active === i} aria-controls="work-mode-detail" onClick={() => setActive(i)}>
-        <span className={s.number}>0{i + 1}</span>{mode.label}<ArrowDown size={15} />
-      </button>)}
+    <div className={s.cardStack}>
+      {modes.map((mode, i) => {
+        const depth = (i - active + modes.length) % modes.length;
+        const Icon = modeIcons[i];
+        return <motion.div key={mode.label} className={s.modeCard} id={`mode-card-${i}`} aria-hidden={depth !== 0} inert={depth !== 0}
+          style={{ zIndex: 3 - depth }} initial={false}
+          animate={{ transform: reduced ? 'none' : `translate(${(depth === 1 ? 20 : depth === 2 ? -16 : 0) * (mobile ? 0.5 : 1)}px, ${depth * 20}px) rotate(${(depth === 1 ? 7 : depth === 2 ? -7 : -2) * (mobile ? 0.6 : 1)}deg) scale(${1 - depth * 0.035})` }}
+          transition={reduced ? { duration: 0 } : spring}>
+          <div className={s.cardTop}><span>0{i + 1}</span><Icon size={28} strokeWidth={1.5} /></div>
+          <h3>{mode.title}</h3><p>{mode.text}</p>
+          <div className={s.cardBottom}><span>{mode.detail}</span><button type="button" aria-label="Next working mode" onClick={nextMode}><ArrowRight size={23} /></button></div>
+        </motion.div>;
+      })}
     </div>
-    <div className={s.modePanel} id="work-mode-detail" aria-live="polite">
-      <AnimatePresence initial={false} mode="wait"><motion.div key={active}
-        initial={{ opacity: 0, transform: reduced ? 'none' : 'translateY(12px)' }}
-        animate={{ opacity: 1, transform: 'translateY(0px)' }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : 0.18 }}>
-        <h3>{current.title}</h3><p>{current.text}</p><span className={s.modeDetail}>{current.detail}</span>
-      </motion.div></AnimatePresence>
+    <div className={s.modeButtons} aria-label="How I tend to work">
+      {modes.map((mode, i) => <button type="button" key={mode.label} ref={(element) => { controls.current[i] = element; }} aria-pressed={active === i} aria-controls={`mode-card-${i}`} onClick={() => setActive(i)}>
+        <span>0{i + 1}</span>{mode.label}
+      </button>)}
     </div>
   </div>;
 }
 
-export function ProjectIndex() {
-  const [active, setActive] = useState(0);
+function ProjectChapter({ index }: { index: number }) {
+  const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
-  const tabs = useRef<Array<HTMLButtonElement | null>>([]);
-  const current = projects[active];
-  function move(event: KeyboardEvent<HTMLButtonElement>, index: number) {
-    let next = index;
-    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') next = (index + 1) % projects.length;
-    else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') next = (index + projects.length - 1) % projects.length;
-    else if (event.key === 'Home') next = 0;
-    else if (event.key === 'End') next = projects.length - 1;
-    else return;
-    event.preventDefault();
-    setActive(next);
-    tabs.current[next]?.focus();
-  }
-  return <div className={s.projectIndex}>
-    <div className={s.projectTabs} role="tablist" aria-label="Selected projects" aria-orientation="vertical">
-      {projects.map((project, i) => <button type="button" key={project.title} role="tab"
-        ref={(element) => { tabs.current[i] = element; }} id={`project-tab-${i}`} aria-controls={`project-panel-${i}`}
-        aria-selected={active === i} tabIndex={active === i ? 0 : -1} onClick={() => setActive(i)} onKeyDown={(event) => move(event, i)}>
-        <span className={s.number}>0{i + 1}</span><span>{project.title}</span><ArrowUpRight size={19} />
-        {active === i && <motion.span className={s.tabMarker} layoutId="selected-project" transition={reduced ? { duration: 0 } : spring} />}
-      </button>)}
-    </div>
-    {projects.map((project, i) => <div key={project.title} role="tabpanel" id={`project-panel-${i}`} aria-labelledby={`project-tab-${i}`} hidden={active !== i} tabIndex={0} className={s.projectPanel}>
-      {active === i && <motion.div className={s.projectContent} key={active} initial={false}
-        animate={reduced ? undefined : { transform: ['translateY(20px)', 'translateY(0px)'], opacity: [0, 1] }} transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}>
-        <div className={s.projectTopline}><span>{current.category}</span><span>0{active + 1} / 03</span></div>
-        <h3>{current.title}</h3><p>{current.text}</p>
-        <div className={s.projectBottom}><span>{current.stack}</span><a href={current.href} target="_blank" rel="noreferrer">View source <ArrowUpRight size={18} /></a></div>
-        <div className={s.projectCaption}>{current.signal}</div>
-      </motion.div>}
-    </div>)}
-  </div>;
+  const mobile = useSyncExternalStore(subscribeMobile, getMobile, getServerMobile);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'start 0.12'] });
+  const transform = useTransform(scrollYProgress, [0, 1], mobile
+    ? ['translateY(28px)', 'translateY(0px)']
+    : ['translateY(80px) scale(0.9) rotate(3deg)', 'translateY(0px) scale(1) rotate(0deg)']);
+  const project = projects[index];
+  return <article ref={ref} className={s.projectChapter} style={{ '--chapter-top': `${24 + index * 24}px` } as CSSProperties}>
+    <motion.div className={s.chapterSurface} style={reduced ? undefined : { transform }}>
+      <div className={s.chapterTop}><span>{project.category}</span><span>0{index + 1} / 03</span></div>
+      <div className={s.chapterGrid}><h3>{project.title}</h3><p>{project.text}</p></div>
+      <div className={s.chapterBottom}><div><span>{project.stack}</span><p>{project.signal}</p></div><a href={project.href} target="_blank" rel="noreferrer">View source <ArrowUpRight size={22} /></a></div>
+    </motion.div>
+  </article>;
+}
+
+export function ProjectIndex() {
+  return <div className={s.projectChapters}>{projects.map((project, index) => <ProjectChapter key={project.title} index={index} />)}</div>;
 }
 
 const icons = [Film, Music2, Puzzle];
 
-export function OutsideBuild() {
-  const [active, setActive] = useState<number | null>(0);
+function InterestPoster({ index }: { index: number }) {
   const reduced = useReducedMotion();
-  return <div className={s.interests}>
-    {interests.map((interest, i) => {
-      const Icon = icons[i];
-      const expanded = active === i;
-      return <Reveal key={interest.category}><article className={s.interest} data-expanded={expanded}>
-        <h3><button type="button" aria-expanded={expanded} aria-controls={`interest-${i}`} onClick={() => setActive(expanded ? null : i)}>
-          <span className={s.interestMeta}>0{i + 1} / {interest.category}</span><span className={s.interestTitle}>{interest.title}</span>
-          <motion.span animate={{ rotate: expanded ? 45 : 0 }} transition={reduced ? { duration: 0 } : spring}><Plus size={26} /></motion.span>
-        </button></h3>
-        <div id={`interest-${i}`} className={s.interestBody} aria-hidden={!expanded} inert={!expanded}>
-          <div className={s.interestClip}><div className={s.interestInner}>
-            <Icon className={s.interestIcon} size={72} strokeWidth={1} aria-hidden="true" /><p>{interest.text}</p>
-          </div></div>
-        </div>
-      </article></Reveal>;
-    })}
-  </div>;
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useSpring(y, { stiffness: 150, damping: 20 });
+  const rotateY = useSpring(x, { stiffness: 150, damping: 20 });
+  const [turned, setTurned] = useState(false);
+  const interest = interests[index];
+  const Icon = icons[index];
+  function tilt(event: PointerEvent<HTMLElement>) {
+    if (reduced || event.pointerType !== 'mouse') return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    x.set(((event.clientX - rect.left) / rect.width - 0.5) * 10);
+    y.set(((event.clientY - rect.top) / rect.height - 0.5) * -10);
+  }
+  return <motion.article className={s.interestPoster} data-poster={index} onPointerMove={tilt} onPointerLeave={() => { x.set(0); y.set(0); }}
+    style={reduced ? undefined : { rotateX, rotateY }} initial="rest" whileInView="visible" viewport={{ once: false, amount: 0 }}>
+    <motion.div className={s.posterInner} variants={{ rest: { transform: reduced ? 'none' : `translateY(var(--reveal-distance)) rotate(${index % 2 ? 5 : -5}deg)` }, visible: { transform: 'translateY(0px) rotate(0deg)' } }} transition={reduced ? { duration: 0 } : spring}>
+      <div className={s.posterTop}><span>0{index + 1} / {interest.category}</span><button type="button" aria-label={`Animate ${interest.category.toLowerCase()} illustration`} aria-pressed={turned} onClick={() => setTurned(!turned)}>
+        <motion.span animate={{ rotate: turned && !reduced ? 90 : 0 }} transition={spring}><ArrowUpRight size={23} /></motion.span>
+      </button></div>
+      <motion.div className={s.posterArt} aria-hidden="true" animate={{ rotate: turned && !reduced ? 360 : 0, scale: turned && !reduced ? 1.12 : 1 }} transition={reduced ? { duration: 0 } : { ...spring, duration: 1.1 }}><Icon strokeWidth={0.8} /></motion.div>
+      <div className={s.posterCopy}><h3>{interest.title}</h3><p>{interest.text}</p></div>
+    </motion.div>
+  </motion.article>;
+}
+
+export function OutsideBuild() {
+  return <div className={s.interests}>{interests.map((interest, index) => <InterestPoster key={interest.category} index={index} />)}</div>;
 }

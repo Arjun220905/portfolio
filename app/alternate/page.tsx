@@ -24,19 +24,21 @@ export default function AlternatePortfolio() {
       </header>
       <main id="main-content">
         <section id="top" className={s.hero}>
+          <div className={s.heroCopy}>
           <p className={s.eyebrow}>DEVELOPER RELATIONS × BACKEND SYSTEMS</p>
           <HeroTitle />
           <div className={s.heroFoot}><p>I build backend tools and explain how to use them, so a good idea can become a working integration.</p>
             <a href="#work" className={s.primaryLink}>View selected work <ArrowDown size={18} /></a>
           </div>
-        </section>
-        <section className={s.working} aria-labelledby="working-title">
+          </div>
+        <div className={s.working} aria-labelledby="working-title">
           <div className={s.workingIntro}><span className={s.sectionTag}>HOW I TEND TO WORK</span><h2 id="working-title">I like working across the technical work and the explanation around it.</h2></div>
           <WorkModes />
+        </div>
         </section>
         <section id="work" className={s.section}>
           <Reveal><div className={s.sectionHeading}><span className={s.sectionTag}>SELECTED WORK</span><h2>A few systems I&apos;ve helped make easier to use.</h2><p>Backend work, AI workflows, and the developer experience around them.</p></div></Reveal>
-          <Reveal><ProjectIndex /></Reveal>
+          <ProjectIndex />
           <div className={s.signals}>
             <div><strong>APIs and webhooks</strong><p>Turning moving parts into useful starting points.</p></div>
             <div><strong>Real-time media</strong><p>Meetings, agents, and the moments between them.</p></div>
