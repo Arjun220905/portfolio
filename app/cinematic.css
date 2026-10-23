@@ -1,15 +1,15 @@
 /* One blue palette, with light and dark values tuned independently. */
 :root {
-  --accent: #416981;
-  --blush: #dce7ee;
-  --card-hover: #e2ebf0;
-  --light-edge: #7f9daf;
-  --light-wash: #d8e5ed;
+  --accent: #376e91;
+  --blush: #d9eaf5;
+  --card-hover: #d9eaf5;
+  --light-edge: #7bacc8;
+  --light-wash: #c9e3f1;
   --hero-scrim: #fafafae8;
   --gradient-panel: linear-gradient(125deg, #f7fafc, #e5edf2);
 }
 html[data-theme='dark'] {
-  --accent: #a2c1d2;
+  --accent: #a4d4ef;
   --blush: #263b49;
   --card-hover: #273d4b;
   --light-edge: #7294a9;
@@ -26,14 +26,14 @@ html[data-theme='dark'] {
 .hero-atmosphere { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; border-radius: 20px; }
 .fluid-field { position: absolute; inset: -15%; }
 .fluid-current { position: absolute; width: 75%; height: 100%; pointer-events: none; }
-.fluid-color { width: 100%; height: 100%; border-radius: 45%; background: radial-gradient(ellipse at 50% 50%, #779eb766, #a5c1d538 40%, transparent 70%); }
+.fluid-color { width: 100%; height: 100%; border-radius: 45%; background: radial-gradient(ellipse at 50% 50%, #6ca8d0a6, #a5d3ed80 38%, transparent 68%); }
 .current-primary { right: -10%; top: -25%; }
 .current-secondary { left: 12%; bottom: -48%; width: 95%; }
-.current-secondary .fluid-color { background: radial-gradient(ellipse, #65849640, #c6d8e630 42%, transparent 70%); }
+.current-secondary .fluid-color { background: radial-gradient(ellipse, #9dd9e899, #c6e8f270 40%, transparent 68%); }
 .current-highlight { right: 4%; top: 22%; width: 48%; height: 90%; }
 .current-highlight .fluid-color { background: radial-gradient(ellipse, #ffffffa6, #d9e8ef48 35%, transparent 65%); }
-html[data-theme='dark'] .fluid-color { background: radial-gradient(ellipse, #577f9b88, #35556f55 40%, transparent 70%); }
-html[data-theme='dark'] .current-secondary .fluid-color { background: radial-gradient(ellipse, #54728780, #243c5055 42%, transparent 70%); }
+html[data-theme='dark'] .fluid-color { background: radial-gradient(ellipse, #3879a5b3, #24496380 38%, transparent 68%); }
+html[data-theme='dark'] .current-secondary .fluid-color { background: radial-gradient(ellipse, #538d9e99, #244b6080 40%, transparent 68%); }
 html[data-theme='dark'] .current-highlight .fluid-color { background: radial-gradient(ellipse, #90b4cd40, #688fa333 35%, transparent 65%); }
 .hero-atmosphere[data-visible='false'] .fluid-color { animation-play-state: paused; }
 .hero-bottom .text-link:hover { background: #34576d; }
@@ -52,18 +52,23 @@ html[data-theme='dark'] .about { background: linear-gradient(135deg, #131e27, #2
 .off-clock-card:hover svg { animation: none; transform: translateY(-4px) rotate(-7deg); }
 .off-clock-card svg { transition: transform .4s cubic-bezier(.16,1,.3,1); }
 @media (prefers-reduced-motion: no-preference) {
-  .current-primary .fluid-color { animation: fluid-drift 14s ease-in-out infinite alternate; }
-  .current-secondary .fluid-color { animation: fluid-drift 19s ease-in-out -6s infinite alternate-reverse; }
-  .current-highlight .fluid-color { animation: fluid-breathe 12s ease-in-out -3s infinite alternate; }
+  .current-primary .fluid-color { animation: fluid-drift 6s ease-in-out infinite alternate; }
+  .current-secondary .fluid-color { animation: fluid-drift 8s ease-in-out -4s infinite alternate-reverse; }
+  .current-highlight .fluid-color { animation: fluid-breathe 5s ease-in-out -2s infinite alternate; }
   .hero-bottom .text-link:hover::before { animation: cta-light .8s ease both; }
-  .hero h1 .reveal-line { animation: hero-line-in 1s cubic-bezier(.16,1,.3,1) .12s both; clip-path: none; }
-  .hero h1 .reveal-line + br + .reveal-line { animation-delay: .27s; }
-  .hero-bottom { animation-delay: .42s; }
+  .hero h1 { animation: none; perspective: 900px; }
+  .hero h1 .reveal-line { animation: hero-line-in 1.25s cubic-bezier(.16,1,.3,1) .15s both; clip-path: none; transform-origin: left bottom; }
+  .hero h1 .reveal-line + br + .reveal-line { animation-delay: .4s; }
+  .hero-bottom { animation: hero-content-in .9s cubic-bezier(.16,1,.3,1) .7s both; }
+  .nav { animation: nav-arrive .8s cubic-bezier(.16,1,.3,1) both; }
+  .hero-bottom .text-link::before { animation: cta-light 1s .95s both; }
 }
-@keyframes hero-line-in { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes hero-line-in { from { opacity: 0; transform: translateY(64px) rotateX(14deg); } to { opacity: 1; transform: translateY(0) rotateX(0); } }
+@keyframes hero-content-in { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes nav-arrive { from { opacity: 0; transform: translateY(-18px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes cta-light { to { transform: translateX(100%); } }
-@keyframes fluid-drift { from { transform: translate(-4%, 3%) rotate(-12deg) scale(.94); } to { transform: translate(5%, -5%) rotate(14deg) scale(1.1); } }
-@keyframes fluid-breathe { from { transform: translateY(-5%) scale(.9); opacity: .45; } to { transform: translateY(6%) scale(1.15); opacity: .9; } }
+@keyframes fluid-drift { from { transform: translate(-22%, 12%) rotate(-22deg) scale(.82); } to { transform: translate(18%, -16%) rotate(24deg) scale(1.2); } }
+@keyframes fluid-breathe { from { transform: translate(-18%,-12%) scale(.8); opacity: .4; } to { transform: translate(12%,18%) scale(1.25); opacity: 1; } }
 @media (max-width: 700px) {
   .hero { padding: 55px 0 65px; }
   .fluid-field { opacity: .7; }
