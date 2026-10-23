@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { animate } from 'motion/react';
 
 export function MotionLayer() {
   useEffect(() => {
@@ -39,6 +40,30 @@ export function MotionLayer() {
       });
 
       if (window.matchMedia('(pointer: fine)').matches) {
+        // Move only the contents: the hit target stays stable under the pointer.
+        document.querySelectorAll<HTMLElement>('.hero-bottom .text-link, .socials a, .off-clock-card').forEach(target => {
+          const subject = target.querySelector<HTMLElement | SVGElement>('svg') ?? target;
+          let motion: ReturnType<typeof animate> | undefined;
+          const move = (event: PointerEvent) => {
+            const bounds = target.getBoundingClientRect();
+            const x = ((event.clientX - bounds.left) / bounds.width - .5) * 12;
+            const y = ((event.clientY - bounds.top) / bounds.height - .5) * 10;
+            motion?.stop();
+            motion = animate(subject, { x, y, rotate: target.matches('.off-clock-card') ? x : 0 }, { type: 'spring', stiffness: 220, damping: 22 });
+          };
+          const reset = () => {
+            motion?.stop();
+            motion = animate(subject, { x: 0, y: 0, rotate: 0 }, { type: 'spring', stiffness: 260, damping: 18 });
+          };
+          target.addEventListener('pointermove', move, { passive: true });
+          target.addEventListener('pointerleave', reset);
+          cleanup.push(() => {
+            target.removeEventListener('pointermove', move);
+            target.removeEventListener('pointerleave', reset);
+            motion?.stop();
+            subject.style.removeProperty('transform');
+          });
+        });
         const moveAmbient = (event: PointerEvent) => {
           cancelAnimationFrame(pointerFrame);
           pointerFrame = requestAnimationFrame(() => {
@@ -86,8 +111,8 @@ export function MotionLayer() {
 
           entry.target.querySelectorAll<HTMLElement>('h2, h3').forEach((heading, headingIndex) => {
             const headingAnimation = heading.animate([
-              { opacity: 0.3, transform: 'translateY(18px)', clipPath: 'inset(0 0 100% 0)' },
-              { opacity: 1, transform: 'translateY(0)', clipPath: 'inset(0 0 0 0)' },
+              { opacity: 0.3, transform: 'translateY(18px)' },
+              { opacity: 1, transform: 'translateY(0)' },
             ], { duration: 620, delay: 120 + headingIndex * 70, easing: 'cubic-bezier(.16, 1, .3, 1)' });
             animations.add(headingAnimation);
             headingAnimation.onfinish = () => animations.delete(headingAnimation);
