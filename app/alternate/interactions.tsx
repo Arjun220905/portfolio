@@ -114,20 +114,57 @@ export function WorkModes() {
   </div>;
 }
 
+// Keep the hit area still, and spring only the visual surface inside it.
+function useSurfaceHover(tilt: number) {
+  const reduced = useReducedMotion();
+  const mobile = useSyncExternalStore(subscribeMobile, getMobile, getServerMobile);
+  const y = useSpring(0, { stiffness: 260, damping: 24 });
+  const rotateX = useSpring(0, { stiffness: 210, damping: 24 });
+  const rotateY = useSpring(0, { stiffness: 210, damping: 24 });
+  function reset() { y.set(0); rotateX.set(0); rotateY.set(0); }
+  return {
+    style: reduced || mobile ? undefined : { y, rotateX, rotateY, transformPerspective: 1600 },
+    handlers: {
+      onPointerMove(event: PointerEvent<HTMLElement>) {
+        if (reduced || mobile || !canHover(event)) return;
+        const rect = event.currentTarget.getBoundingClientRect();
+        const xRatio = Math.max(-0.5, Math.min(0.5, (event.clientX - rect.left) / rect.width - 0.5));
+        const yRatio = Math.max(-0.5, Math.min(0.5, (event.clientY - rect.top) / rect.height - 0.5));
+        y.set(-10);
+        rotateX.set(-yRatio * tilt);
+        rotateY.set(xRatio * tilt);
+      },
+      onPointerLeave: reset,
+      onPointerCancel: reset,
+      onFocusCapture: reset,
+    },
+  };
+}
+
+export function WritingLink({ href, children }: { href: string; children: ReactNode }) {
+  const hover = useSurfaceHover(7);
+  return <div className={s.writingHitbox} {...hover.handlers}>
+    <motion.a href={href} target="_blank" rel="noreferrer" style={hover.style}>{children}</motion.a>
+  </div>;
+}
+
 function ProjectChapter({ index }: { index: number }) {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
   const mobile = useSyncExternalStore(subscribeMobile, getMobile, getServerMobile);
+  const hover = useSurfaceHover(4);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'start 0.12'] });
   const transform = useTransform(scrollYProgress, [0, 1], mobile
     ? ['translateY(28px)', 'translateY(0px)']
     : ['translateY(80px) scale(0.9) rotate(3deg)', 'translateY(0px) scale(1) rotate(0deg)']);
   const project = projects[index];
-  return <article ref={ref} className={s.projectChapter} style={{ '--chapter-top': `${24 + index * 24}px` } as CSSProperties}>
-    <motion.div className={s.chapterSurface} style={reduced ? undefined : { transform }}>
-      <div className={s.chapterTop}><span>{project.category}</span><span>0{index + 1} / 03</span></div>
-      <div className={s.chapterGrid}><h3>{project.title}</h3><p>{project.text}</p></div>
-      <div className={s.chapterBottom}><div><span>{project.stack}</span><p>{project.signal}</p></div><a href={project.href} target="_blank" rel="noreferrer">View source <ArrowUpRight size={22} /></a></div>
+  return <article ref={ref} className={s.projectChapter} style={{ '--chapter-top': `${24 + index * 24}px` } as CSSProperties} {...hover.handlers}>
+    <motion.div className={s.chapterScroll} style={reduced ? undefined : { transform }}>
+      <motion.div className={s.chapterSurface} style={hover.style}>
+        <div className={s.chapterTop}><span>{project.category}</span><span>0{index + 1} / 03</span></div>
+        <div className={s.chapterGrid}><h3>{project.title}</h3><p>{project.text}</p></div>
+        <div className={s.chapterBottom}><div><span>{project.stack}</span><p>{project.signal}</p></div><a href={project.href} target="_blank" rel="noreferrer">View source <ArrowUpRight size={22} /></a></div>
+      </motion.div>
     </motion.div>
   </article>;
 }

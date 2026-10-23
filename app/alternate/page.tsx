@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Geist } from 'next/font/google';
 import { ArrowDown, ArrowUpRight, ArrowLeft } from 'lucide-react';
-import { ColorMode, HeroTitle, MagneticLink, OutsideBuild, ProjectIndex, Reveal, WorkModes } from './interactions';
+import { ColorMode, HeroTitle, MagneticLink, OutsideBuild, ProjectIndex, Reveal, WorkModes, WritingLink } from './interactions';
 import { articles } from './content';
 import s from './portfolio.module.css';
 
@@ -58,7 +58,7 @@ export default function AlternatePortfolio() {
         </section>
         <section id="notes" className={s.section}>
           <Reveal><div className={s.sectionHeading}><span className={s.sectionTag}>NOTES</span><h2>Meeting agents and developer adoption.</h2><p>Writing about APIs, webhooks, real-time media, and the small decisions that help infrastructure feel more approachable.</p></div></Reveal>
-          <div className={s.articles}>{articles.map(([title, slug], i) => <Reveal key={slug}><a href={`https://meetstream.ai/blog/${slug}`} target="_blank" rel="noreferrer"><span className={s.number}>0{i + 1}</span><h3>{title}</h3><ArrowUpRight size={23} /></a></Reveal>)}</div>
+          <div className={s.articles}>{articles.map(([title, slug], i) => <Reveal key={slug}><WritingLink href={`https://meetstream.ai/blog/${slug}`}><span className={s.number}>0{i + 1}</span><h3>{title}</h3><ArrowUpRight size={23} /></WritingLink></Reveal>)}</div>
           <a className={s.inlineLink} href="https://meetstream.ai/blog/author/arjun/" target="_blank" rel="noreferrer">View all writing <ArrowUpRight size={18} /></a>
         </section>
       </main>

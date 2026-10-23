@@ -79,6 +79,7 @@
 .projectChapters { position: relative; padding-bottom: 28px; }
 .projectChapter { position: sticky; top: var(--chapter-top); padding-bottom: 24px; }
 .projectChapters:has(a:focus-visible) .projectChapter { position: relative; top: auto; }
+.chapterScroll { transform-origin: center top; }
 .chapterSurface { position: relative; border: 1px solid var(--border); border-radius: 28px; padding: 36px 44px; background: var(--panel); transform-origin: center top; box-shadow: 0 -20px 60px -48px #123f3b80; }
 .projectChapter:nth-child(2) .chapterSurface { background: var(--card); }
 .projectChapter:nth-child(3) .chapterSurface { background: var(--surface); }
@@ -90,7 +91,10 @@
 .chapterBottom span { font-size: 12px; }
 .chapterBottom p { font-size: 11px; margin-top: 7px; color: var(--secondary); }
 .chapterBottom a { display: flex; align-items: center; gap: 24px; font-size: 13px; padding: 12px 18px; border: 1px solid var(--border); border-radius: 100px; white-space: nowrap; transition: background .2s, transform .25s; }
-.chapterBottom a:hover { background: var(--accent); color: var(--accentText); transform: translateY(-3px); }
+.chapterBottom a:is(:hover, :focus-visible) { background: var(--accent); color: var(--accentText); }
+.chapterBottom a svg { flex-shrink: 0; }
+.chapterSurface::after, .writingHitbox a::after { content: ''; position: absolute; inset: 0; border-radius: inherit; border: 1px solid var(--accent); box-shadow: 0 22px 38px -22px color-mix(in srgb, var(--text) 35%, transparent); opacity: 0; pointer-events: none; transition: opacity .25s; }
+.chapterSurface:has(a:focus-visible)::after, .writingHitbox a:focus-visible::after { opacity: 1; }
 .signals { display: flex; justify-content: space-between; gap: 36px; margin: 38px 20px 0; }
 .signals > div { max-width: 260px; }
 .signals strong { font-size: 13px; font-weight: 550; }
@@ -128,12 +132,14 @@
 .articles { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch; padding-bottom: 64px; }
 .articles > div:nth-child(even) { transform: translateY(60px); }
 .articles .revealInner { height: 100%; }
+.writingHitbox { height: 100%; }
+.writingHitbox a { position: relative; }
+.writingHitbox a::before { content: ''; position: absolute; left: 30px; right: 30px; bottom: 16px; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .4s cubic-bezier(.2,.8,.2,1); pointer-events: none; }
 .articles a { display: grid; grid-template-columns: 1fr auto; gap: 42px 20px; padding: 30px; min-height: 220px; height: 100%; background: var(--card); border-radius: 20px; transition: background .25s; }
-.articles a:hover { background: var(--panel); }
+.articles a:is(:hover, :focus-visible) { background: var(--panel); }
 .articles h3 { grid-column: 1; grid-row: 2; font-size: clamp(25px, 3vw, 42px); line-height: 1.15; font-weight: 450; letter-spacing: -.05em; max-width: 380px; }
 .number { font-size: 12px; color: var(--secondary); }
 .articles svg { grid-column: 2; grid-row: 1; transition: transform .3s; }
-.articles a:hover svg { transform: rotate(45deg) translateY(-5px); }
 .inlineLink { display: flex; align-items: center; gap: 16px; width: fit-content; margin: 35px auto 0; padding: 12px 20px; border-bottom: 1px solid var(--border); font-size: 13px; }
 .footer { padding: 65px 3% 35px; }
 .footer h2 { font-size: clamp(54px, 8.9vw, 128px); line-height: 1.1; letter-spacing: -.075em; font-weight: 450; }
@@ -155,7 +161,25 @@
   46% { transform: translateY(-22px); opacity: 0; }
   100% { transform: translateY(0); opacity: 1; }
 }
+@keyframes diagonalPass {
+  0%, 100% { transform: translate(0, 0); opacity: 1; }
+  45% { transform: translate(12px, -12px); opacity: 0; }
+  46% { transform: translate(-12px, 12px); opacity: 0; }
+}
 @media (min-width: 768px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .projectChapter:hover .chapterSurface::after, .writingHitbox:hover a::after { opacity: 1; }
+  .chapterGrid h3, .articles h3 { transition: transform .4s cubic-bezier(.2,.8,.2,1), color .25s; }
+  .projectChapter:hover .chapterGrid h3 { transform: translateX(8px); color: var(--accent); }
+  .chapterBottom a:hover { transform: translateY(-3px); }
+  .chapterBottom a:hover svg { animation: diagonalPass .5s ease both; }
+  .writingHitbox:hover a { background: var(--panel); }
+  .writingHitbox:hover h3 { transform: translateX(6px); color: var(--accent); }
+  .writingHitbox:hover a::before { transform: scaleX(1); }
+  .writingHitbox:hover svg { transform: translate(5px, -5px) scale(1.25); color: var(--accent); }
+  .inlineLink { transition: color .25s, border-color .25s; }
+  .inlineLink svg { transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+  .inlineLink:hover { color: var(--accent); border-color: var(--accent); }
+  .inlineLink:hover svg { transform: translate(5px, -5px); }
   .heroWord:hover { transform: translateX(14px) rotate(-2deg); color: var(--accent); }
   .heroWord:hover .heroGlyph { animation: letterWave .65s cubic-bezier(.2,.8,.2,1) var(--letter-delay) both; }
   .making:hover::after { transform: scaleX(1); }
@@ -266,7 +290,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .page *, .page *::before, .page *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
-  .revealInner, .chapterSurface, .interestPoster, .posterInner, .posterArt, .building > span, .making, .heroWord, .heroGlyph, .stackPointer, .primaryLink { transform: none !important; }
+  .revealInner, .chapterScroll, .chapterSurface, .writingHitbox a, .interestPoster, .posterInner, .posterArt, .building > span, .making, .heroWord, .heroGlyph, .stackPointer, .primaryLink { transform: none !important; }
   .projectChapter { position: relative; top: auto; }
   .modeCard[aria-hidden='true'] { visibility: hidden; }
 }
