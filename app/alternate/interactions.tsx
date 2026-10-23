@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState, useSyncExternalStore, type CSSProperties, type PointerEvent, type ReactNode } from 'react';
-import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
 import { ArrowUpRight, ArrowRight, Film, Music2, Puzzle, Sun, Moon, Braces, MessageSquare, Sparkles } from 'lucide-react';
 import { interests, modes, projects } from './content';
 import s from './portfolio.module.css';
@@ -177,27 +177,22 @@ const icons = [Film, Music2, Puzzle];
 
 function InterestPoster({ index }: { index: number }) {
   const reduced = useReducedMotion();
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const rotateX = useSpring(y, { stiffness: 150, damping: 20 });
-  const rotateY = useSpring(x, { stiffness: 150, damping: 20 });
+  const hover = useSurfaceHover(7);
   const [turned, setTurned] = useState(false);
   const interest = interests[index];
   const Icon = icons[index];
-  function tilt(event: PointerEvent<HTMLElement>) {
-    if (reduced || event.pointerType !== 'mouse') return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    x.set(((event.clientX - rect.left) / rect.width - 0.5) * 10);
-    y.set(((event.clientY - rect.top) / rect.height - 0.5) * -10);
-  }
-  return <motion.article className={s.interestPoster} data-poster={index} onPointerMove={tilt} onPointerLeave={() => { x.set(0); y.set(0); }}
-    style={reduced ? undefined : { rotateX, rotateY }} initial="rest" whileInView="visible" viewport={{ once: false, amount: 0 }}>
-    <motion.div className={s.posterInner} variants={{ rest: { transform: reduced ? 'none' : `translateY(var(--reveal-distance)) rotate(${index % 2 ? 5 : -5}deg)` }, visible: { transform: 'translateY(0px) rotate(0deg)' } }} transition={reduced ? { duration: 0 } : spring}>
-      <div className={s.posterTop}><span>0{index + 1} / {interest.category}</span><button type="button" aria-label={`Animate ${interest.category.toLowerCase()} illustration`} aria-pressed={turned} onClick={() => setTurned(!turned)}>
-        <motion.span animate={{ rotate: turned && !reduced ? 90 : 0 }} transition={spring}><ArrowUpRight size={23} /></motion.span>
-      </button></div>
-      <motion.div className={s.posterArt} aria-hidden="true" animate={{ rotate: turned && !reduced ? 360 : 0, scale: turned && !reduced ? 1.12 : 1 }} transition={reduced ? { duration: 0 } : { ...spring, duration: 1.1 }}><Icon strokeWidth={0.8} /></motion.div>
-      <div className={s.posterCopy}><h3>{interest.title}</h3><p>{interest.text}</p></div>
+  return <motion.article className={s.interestPoster} data-poster={index} {...hover.handlers}
+    initial="rest" whileInView="visible" viewport={{ once: false, amount: 0 }}>
+    <motion.div className={s.posterReveal} variants={{ rest: { transform: reduced ? 'none' : `translateY(var(--reveal-distance)) rotate(${index % 2 ? 5 : -5}deg)` }, visible: { transform: 'translateY(0px) rotate(0deg)' } }} transition={reduced ? { duration: 0 } : spring}>
+      <motion.div className={s.posterHover} style={hover.style}>
+        <div className={s.posterInner}>
+          <div className={s.posterTop}><span>0{index + 1} / {interest.category}</span><button type="button" aria-label={`Animate ${interest.category.toLowerCase()} illustration`} aria-pressed={turned} onClick={() => setTurned(!turned)}>
+            <motion.span animate={{ rotate: turned && !reduced ? 90 : 0 }} transition={spring}><ArrowUpRight size={23} /></motion.span>
+          </button></div>
+          <motion.div className={s.posterArt} aria-hidden="true" animate={{ rotate: turned && !reduced ? 360 : 0, scale: turned && !reduced ? 1.12 : 1 }} transition={reduced ? { duration: 0 } : { ...spring, duration: 1.1 }}><Icon strokeWidth={0.8} /></motion.div>
+          <div className={s.posterCopy}><h3>{interest.title}</h3><p>{interest.text}</p></div>
+        </div>
+      </motion.div>
     </motion.div>
   </motion.article>;
 }

@@ -106,11 +106,15 @@
 .outsideHeading p { font-size: 15px; color: var(--secondary); max-width: 360px; padding-bottom: 8px; }
 .interests { display: grid; grid-template-columns: 1.05fr 1fr; gap: 24px; perspective: 1500px; }
 .interestPoster { min-width: 0; }
+.posterReveal, .posterHover { height: 100%; }
+.posterHover { position: relative; border-radius: 24px; }
+.posterHover::after { content: ''; position: absolute; inset: 0; border-radius: inherit; border: 1px solid var(--accent); box-shadow: 0 22px 38px -22px color-mix(in srgb, var(--text) 35%, transparent); opacity: 0; pointer-events: none; transition: opacity .25s; }
+.posterHover:has(button:focus-visible)::after { opacity: 1; }
 .interestPoster[data-poster='0'] { grid-row: span 2; }
 .posterInner { min-height: 310px; height: 100%; position: relative; overflow: hidden; border-radius: 24px; padding: 28px; background: var(--panel); display: grid; grid-template-columns: 1fr 110px; grid-template-rows: auto 1fr; gap: 25px; }
 .posterTop { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; font-size: 11px; letter-spacing: .04em; }
 .posterTop button { width: 44px; height: 44px; border: 1px solid var(--border); border-radius: 50%; display: grid; place-items: center; color: var(--text); background: transparent; }
-.posterTop button:hover { background: var(--surface); }
+.posterTop button:is(:hover, :focus-visible) { background: var(--accent); color: var(--accentText); border-color: var(--accent); }
 .posterTop button > span { display: flex; }
 .posterArt { align-self: center; grid-column: 2; grid-row: 2; color: var(--accent); }
 .posterArt svg { width: 100%; height: auto; }
@@ -167,6 +171,14 @@
   46% { transform: translate(-12px, 12px); opacity: 0; }
 }
 @media (min-width: 768px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .interestPoster:hover .posterHover::after { opacity: 1; }
+  .posterCopy h3 { transition: transform .4s cubic-bezier(.2,.8,.2,1), color .25s; }
+  .interestPoster:hover .posterCopy h3 { transform: translateY(-5px); color: var(--accent); }
+  .posterArt svg { transform-origin: center; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+  .interestPoster:hover .posterArt svg { transform: translateY(-6px) rotate(-8deg) scale(1.12); }
+  .posterTop button { transition: transform .3s, background .25s, color .25s, border-color .25s; }
+  .interestPoster:hover .posterTop button { background: var(--accent); color: var(--accentText); border-color: var(--accent); transform: scale(1.1); }
+  .posterTop button:hover svg { animation: diagonalPass .5s ease both; }
   .projectChapter:hover .chapterSurface::after, .writingHitbox:hover a::after { opacity: 1; }
   .chapterGrid h3, .articles h3 { transition: transform .4s cubic-bezier(.2,.8,.2,1), color .25s; }
   .projectChapter:hover .chapterGrid h3 { transform: translateX(8px); color: var(--accent); }
@@ -290,7 +302,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .page *, .page *::before, .page *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
-  .revealInner, .chapterScroll, .chapterSurface, .writingHitbox a, .interestPoster, .posterInner, .posterArt, .building > span, .making, .heroWord, .heroGlyph, .stackPointer, .primaryLink { transform: none !important; }
+  .revealInner, .chapterScroll, .chapterSurface, .writingHitbox a, .interestPoster, .posterReveal, .posterHover, .posterInner, .posterArt, .building > span, .making, .heroWord, .heroGlyph, .stackPointer, .primaryLink { transform: none !important; }
   .projectChapter { position: relative; top: auto; }
   .modeCard[aria-hidden='true'] { visibility: hidden; }
 }
