@@ -93,10 +93,19 @@ export function MotionLayer() {
           });
         });
       }
+      const revealed = new WeakSet<Element>();
+      const arriving = new WeakSet<Element>();
       observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
-          if (!entry.isIntersecting) return;
-          observer?.unobserve(entry.target);
+          const replay = entry.target.matches('.project, .off-clock-card, .off-clock-head');
+          if (!entry.isIntersecting) {
+            // Rearm only after fully leaving, never at the reveal threshold.
+            if (replay && !arriving.has(entry.target)) revealed.delete(entry.target);
+            return;
+          }
+          if (entry.intersectionRatio < .18 || revealed.has(entry.target)) return;
+          revealed.add(entry.target);
+          if (!replay) observer?.unobserve(entry.target);
           entry.target.classList.add('is-visible');
           // Animate only when reached; content stays readable if scripting fails.
           const isLabel = entry.target.matches('.section-label, .working-set-label');
@@ -107,7 +116,8 @@ export function MotionLayer() {
           const isOutsideHeading = entry.target.matches('.off-clock-head');
           if (isProject || isHobby || isOutsideHeading) {
             const mobile = window.matchMedia('(max-width: 700px)').matches;
-            const distance = mobile ? 42 : 76;
+            const direction = entry.boundingClientRect.top < 0 ? -1 : 1;
+            const distance = (mobile ? 28 : 76) * direction;
             const rotation = isHobby && !mobile ? (index - 1) * 2.5 : 0;
             const start = isOutsideHeading
               ? `translateX(${mobile ? -24 : -56}px)`
@@ -116,13 +126,19 @@ export function MotionLayer() {
               { opacity: 0, transform: start },
               { opacity: 1, transform: 'translate(0, 0) scale(1) rotate(0deg)' },
             ], {
-              duration: isOutsideHeading ? 1100 : 950,
+              duration: mobile ? 600 : isOutsideHeading ? 1100 : 950,
               delay: isHobby && !mobile ? index * 150 : 0,
               easing: 'cubic-bezier(.16, 1, .3, 1)',
               fill: 'backwards',
             });
             animations.add(arrival);
-            arrival.onfinish = () => animations.delete(arrival);
+            arriving.add(entry.target);
+            arrival.onfinish = () => {
+              animations.delete(arrival);
+              arriving.delete(entry.target);
+              const bounds = entry.target.getBoundingClientRect();
+              if (bounds.bottom <= 0 || bounds.top >= window.innerHeight) revealed.delete(entry.target);
+            };
             // One coordinated card entrance avoids competing nested transforms.
             return;
           }
@@ -150,7 +166,7 @@ export function MotionLayer() {
             reveal.onfinish = () => animations.delete(reveal);
           });
         });
-      }, { threshold: 0.18 });
+      }, { threshold: [0, 0.18] });
       document.querySelectorAll('.section-label, .working-set-label, .section-intro, .signal-strip, .project, .working-set-grid, .off-clock-head, .off-clock-card, .about-grid, .notes-grid, .footer').forEach(element => observer?.observe(element));
     };
 
