@@ -15,6 +15,23 @@ function subscribeMobile(notify: () => void) {
 }
 const getMobile = () => window.matchMedia(mobileQuery).matches;
 const getServerMobile = () => false;
+const canHover = (event: PointerEvent<HTMLElement>) => event.pointerType === 'mouse' && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+export function MagneticLink({ href, className, children }: { href: string; className?: string; children: ReactNode }) {
+  const reduced = useReducedMotion();
+  const mobile = useSyncExternalStore(subscribeMobile, getMobile, getServerMobile);
+  const x = useSpring(0, { stiffness: 250, damping: 20 });
+  const y = useSpring(0, { stiffness: 250, damping: 20 });
+  function reset() { x.set(0); y.set(0); }
+  return <span className={s.magneticTarget} onPointerMove={(event) => {
+    if (reduced || mobile || !canHover(event)) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    x.set(Math.max(-9, Math.min(9, (event.clientX - rect.left - rect.width / 2) * 0.12)));
+    y.set(Math.max(-6, Math.min(6, (event.clientY - rect.top - rect.height / 2) * 0.15)));
+  }} onPointerLeave={reset} onPointerCancel={reset}>
+    <motion.a href={href} className={className} style={reduced || mobile ? undefined : { x, y }} onFocus={reset}>{children}</motion.a>
+  </span>;
+}
 
 export function Reveal({ children, className = '' }: { children: ReactNode; className?: string }) {
   const reduced = useReducedMotion();
@@ -31,8 +48,9 @@ export function HeroTitle() {
   return <h1 className={s.headline} aria-label="Building things. Making sense of them.">
     <span className={s.building} aria-hidden="true">{['Building', 'things.'].map((word, i) => <motion.span key={word}
       initial={false} animate={reduced ? undefined : { transform: ['translateY(75px) rotate(6deg)', 'translateY(0px) rotate(0deg)'], opacity: [0, 1] }}
-      transition={{ duration: 1, delay: i * 0.16, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={reduced ? undefined : { x: 14, rotate: -2 }}>{word}{i === 0 ? ' ' : ''}</motion.span>)}</span>
+      transition={{ duration: 1, delay: i * 0.16, ease: [0.16, 1, 0.3, 1] }}>
+      <span className={s.heroWord}>{word.split('').map((letter, index) => <span className={s.heroGlyph} key={index} style={{ '--letter-delay': `${index * 28}ms` } as CSSProperties}>{letter}</span>)}</span>{i === 0 ? ' ' : ''}
+    </motion.span>)}</span>
     <motion.span className={s.making} aria-hidden="true" initial={false}
       animate={reduced ? undefined : { transform: ['translateX(-35px)', 'translateX(0px)'], opacity: [0, 1] }}
       transition={{ duration: 0.8, delay: 0.3 }}>Making sense of them.</motion.span>
@@ -54,25 +72,39 @@ export function WorkModes() {
   const reduced = useReducedMotion();
   const mobile = useSyncExternalStore(subscribeMobile, getMobile, getServerMobile);
   const controls = useRef<Array<HTMLButtonElement | null>>([]);
+  const [hovered, setHovered] = useState(false);
+  const rotateX = useSpring(0, { stiffness: 180, damping: 23 });
+  const rotateY = useSpring(0, { stiffness: 180, damping: 23 });
+  const spread = hovered && !reduced && !mobile;
+  function resetStack() { setHovered(false); rotateX.set(0); rotateY.set(0); }
   function nextMode() {
     const next = (active + 1) % modes.length;
     setActive(next);
     controls.current[next]?.focus({ preventScroll: true });
   }
   return <div className={s.modes}>
-    <div className={s.cardStack}>
+    <div className={s.cardStack} data-hovered={spread} onPointerEnter={(event) => {
+      if (!reduced && !mobile && window.innerWidth >= 1100 && canHover(event)) setHovered(true);
+    }} onPointerMove={(event) => {
+      if (reduced || mobile || !canHover(event)) return;
+      const rect = event.currentTarget.getBoundingClientRect();
+      rotateX.set((0.5 - (event.clientY - rect.top) / rect.height) * 10);
+      rotateY.set(((event.clientX - rect.left) / rect.width - 0.5) * 12);
+    }} onPointerLeave={resetStack} onPointerCancel={resetStack}>
+      <motion.div className={s.stackPointer} style={reduced || mobile ? undefined : { rotateX, rotateY }}>
       {modes.map((mode, i) => {
         const depth = (i - active + modes.length) % modes.length;
         const Icon = modeIcons[i];
         return <motion.div key={mode.label} className={s.modeCard} id={`mode-card-${i}`} aria-hidden={depth !== 0} inert={depth !== 0}
           style={{ zIndex: 3 - depth }} initial={false}
-          animate={{ transform: reduced ? 'none' : `translate(${(depth === 1 ? 20 : depth === 2 ? -16 : 0) * (mobile ? 0.5 : 1)}px, ${depth * 20}px) rotate(${(depth === 1 ? 7 : depth === 2 ? -7 : -2) * (mobile ? 0.6 : 1)}deg) scale(${1 - depth * 0.035})` }}
+          animate={{ transform: reduced ? 'none' : `translate(${(depth === 1 ? (spread ? 32 : 20) : depth === 2 ? (spread ? -32 : -16) : 0) * (mobile ? 0.5 : 1)}px, ${depth === 0 && spread ? -14 : depth * 20}px) rotate(${(depth === 1 ? (spread ? 10 : 7) : depth === 2 ? (spread ? -10 : -7) : spread ? 0 : -2) * (mobile ? 0.6 : 1)}deg) scale(${1 - depth * (spread ? 0.05 : 0.035) + (depth === 0 && spread ? 0.02 : 0)})` }}
           transition={reduced ? { duration: 0 } : spring}>
           <div className={s.cardTop}><span>0{i + 1}</span><Icon size={28} strokeWidth={1.5} /></div>
           <h3>{mode.title}</h3><p>{mode.text}</p>
           <div className={s.cardBottom}><span>{mode.detail}</span><button type="button" aria-label="Next working mode" onClick={nextMode}><ArrowRight size={23} /></button></div>
         </motion.div>;
       })}
+      </motion.div>
     </div>
     <div className={s.modeButtons} aria-label="How I tend to work">
       {modes.map((mode, i) => <button type="button" key={mode.label} ref={(element) => { controls.current[i] = element; }} aria-pressed={active === i} aria-controls={`mode-card-${i}`} onClick={() => setActive(i)}>

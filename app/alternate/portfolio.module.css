@@ -28,7 +28,7 @@
 .wordmark span { color: var(--secondary); font-size: 11px; font-weight: 400; letter-spacing: 0; margin-top: 4px; }
 .navigation { display: flex; margin-left: auto; gap: 8px; font-size: 13px; }
 .navigation a { padding: 10px 16px; border-radius: 100px; transition: background .25s, transform .25s; }
-.navigation a:hover { background: var(--panel); transform: translateY(-3px); }
+.navigation a:hover { background: var(--panel); }
 .themeButton { width: 44px; height: 44px; border: 1px solid var(--border); border-radius: 50%; display: grid; place-items: center; background: none; color: var(--text); }
 .themeButton:hover { background: var(--panel); }
 .sun { display: none; }
@@ -41,16 +41,23 @@
 .building > span { display: block; transform-origin: left bottom; }
 .making { display: block; font-size: clamp(27px, 2.8vw, 42px); line-height: 1.2; letter-spacing: -.05em; margin-top: 24px; }
 .heroFoot p { font-size: 15px; max-width: 370px; color: var(--secondary); }
-.primaryLink { display: inline-flex; align-items: center; gap: 34px; background: var(--accent); color: var(--accentText); border-radius: 100px; font-size: 13px; padding: 17px 24px; margin-top: 30px; transition: transform .3s; }
-.primaryLink:hover { transform: translateY(-4px); }
-.primaryLink svg { transition: transform .3s; }
-.primaryLink:hover svg { transform: translateY(4px); }
+.magneticTarget { display: inline-flex; }
+.primaryLink { position: relative; isolation: isolate; overflow: hidden; display: inline-flex; align-items: center; gap: 34px; background: var(--accent); color: var(--accentText); border-radius: 100px; font-size: 13px; padding: 17px 24px; margin-top: 30px; transition: color .3s; }
+.primaryLink::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--panel); border-radius: inherit; transform: translateY(105%); transition: transform .4s cubic-bezier(.2,.8,.2,1); }
+.primaryLink:focus-visible { color: var(--text); }
+.primaryLink:focus-visible::before { transform: translateY(0); }
+.heroWord { display: inline-block; transform-origin: left bottom; transition: transform .5s cubic-bezier(.2,.8,.2,1), color .3s; }
+.heroGlyph { display: inline-block; }
+.making { width: fit-content; position: relative; }
+.making::after { content: ''; position: absolute; left: 0; right: 0; bottom: -8px; height: 3px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .4s cubic-bezier(.2,.8,.2,1); }
 .working { min-width: 0; padding-top: 8px; }
 .workingIntro { max-width: 350px; margin: 0 0 35px 20px; }
 .sectionTag { display: block; font-size: 10px; letter-spacing: .07em; color: var(--secondary); margin-bottom: 20px; }
 .workingIntro .sectionTag { margin-bottom: 12px; }
 .workingIntro h2 { font-size: 20px; line-height: 1.4; letter-spacing: -.035em; font-weight: 450; }
 .cardStack { position: relative; height: 390px; margin: 0 15px; perspective: 1200px; }
+.stackPointer { position: relative; height: 100%; transform-style: preserve-3d; }
+.cardStack[data-hovered='true'] .stackPointer { will-change: transform; }
 .modeCard { position: absolute; inset: 0; border: 1px solid var(--border); border-radius: 20px; background: var(--panel); padding: 30px; display: flex; flex-direction: column; box-shadow: 0 16px 22px -22px #244a4a90; transform-origin: center bottom; }
 .modeCard:nth-child(2) { background: var(--card); }
 .modeCard:nth-child(3) { background: var(--surface); }
@@ -138,6 +145,36 @@
 .footerBottom a { display: inline-flex; align-items: center; gap: 7px; padding: 12px 0; }
 .footerBottom a:hover { text-decoration: underline; text-underline-offset: 4px; }
 .revealInner { min-width: 0; transform-origin: left bottom; }
+@keyframes letterWave {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  45% { transform: translateY(-14px) rotate(-5deg); }
+}
+@keyframes arrowPass {
+  0% { transform: translateY(0); opacity: 1; }
+  45% { transform: translateY(22px); opacity: 0; }
+  46% { transform: translateY(-22px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+@media (min-width: 768px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .heroWord:hover { transform: translateX(14px) rotate(-2deg); color: var(--accent); }
+  .heroWord:hover .heroGlyph { animation: letterWave .65s cubic-bezier(.2,.8,.2,1) var(--letter-delay) both; }
+  .making:hover::after { transform: scaleX(1); }
+  .primaryLink:hover { color: var(--text); }
+  .primaryLink:hover::before { transform: translateY(0); }
+  .primaryLink:hover svg { animation: arrowPass .55s ease both; }
+  .navigation a { position: relative; isolation: isolate; overflow: hidden; transition: color .2s, transform .3s; }
+  .navigation a::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--accent); transform: translateY(105%); transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+  .navigation a:hover { color: var(--accentText); transform: translateY(-4px) rotate(-3deg); }
+  .navigation a:hover::before { transform: translateY(0); }
+  .themeButton { transition: background .25s, color .25s, transform .4s; }
+  .themeButton svg { transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+  .themeButton:hover { background: var(--accent); color: var(--accentText); transform: scale(1.1); }
+  .themeButton:hover svg { transform: rotate(90deg); }
+  .modeButtons button { transition: transform .3s, background .25s; }
+  .modeButtons button:hover { transform: translateY(-5px) scale(1.06); background: var(--panel); }
+  .cardBottom button { transition: transform .3s, background .25s; }
+  .cardBottom button:hover { transform: rotate(-12deg) scale(1.14); }
+}
 @media (max-width: 1100px) {
   .shell { width: calc(100% - 48px); }
   .hero { gap: 4%; padding-inline: 0; }
@@ -229,7 +266,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .page *, .page *::before, .page *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
-  .revealInner, .chapterSurface, .interestPoster, .posterInner, .posterArt, .building > span, .making { transform: none !important; }
+  .revealInner, .chapterSurface, .interestPoster, .posterInner, .posterArt, .building > span, .making, .heroWord, .heroGlyph, .stackPointer, .primaryLink { transform: none !important; }
   .projectChapter { position: relative; top: auto; }
   .modeCard[aria-hidden='true'] { visibility: hidden; }
 }

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Geist } from 'next/font/google';
 import { ArrowDown, ArrowUpRight, ArrowLeft } from 'lucide-react';
-import { ColorMode, HeroTitle, OutsideBuild, ProjectIndex, Reveal, WorkModes } from './interactions';
+import { ColorMode, HeroTitle, MagneticLink, OutsideBuild, ProjectIndex, Reveal, WorkModes } from './interactions';
 import { articles } from './content';
 import s from './portfolio.module.css';
 
@@ -28,7 +28,7 @@ export default function AlternatePortfolio() {
           <p className={s.eyebrow}>DEVELOPER RELATIONS × BACKEND SYSTEMS</p>
           <HeroTitle />
           <div className={s.heroFoot}><p>I build backend tools and explain how to use them, so a good idea can become a working integration.</p>
-            <a href="#work" className={s.primaryLink}>View selected work <ArrowDown size={18} /></a>
+            <MagneticLink href="#work" className={s.primaryLink}>View selected work <ArrowDown size={18} /></MagneticLink>
           </div>
           </div>
         <div className={s.working} aria-labelledby="working-title">
