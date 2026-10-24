@@ -1,16 +1,26 @@
-/* Sea-glass studio: isolated tokens, physical cards, no global overrides. */
+/* Ivory and teal: isolated palette, physical cards, no global overrides. */
 .page {
-  --surface: #eff5f1; --panel: #d3e5dc; --card: #e2eee7;
-  --text: #173f3b; --secondary: #46665e; --border: #adc7bb;
-  --accent: #176c61; --accentText: #f0faf5; --reveal-distance: 88px;
+  --ivory: #f6f2e8; --teal: #175f60; --muted-teal: #6e9290;
+  --surface: var(--ivory);
+  --panel: color-mix(in srgb, var(--muted-teal) 32%, var(--ivory));
+  --card: color-mix(in srgb, var(--muted-teal) 14%, var(--ivory));
+  --text: #143d3f; --secondary: #365e5e;
+  --border: color-mix(in srgb, var(--muted-teal) 65%, var(--ivory));
+  --accent: var(--teal); --accentText: var(--ivory);
+  --shadow: color-mix(in srgb, var(--teal) 40%, transparent);
+  --reveal-distance: 88px;
   min-height: 100dvh; background: var(--surface); color: var(--text);
   font: 16px/1.6 var(--alternate-font), Arial, sans-serif;
   overflow: clip; isolation: isolate;
 }
 :global([data-theme='dark']) .page {
-  --surface: #102e2e; --panel: #214b47; --card: #183e3b;
-  --text: #e1f2e9; --secondary: #b1d0c5; --border: #4b7568;
-  --accent: #b8e4d0; --accentText: #103c34;
+  --surface: #123638; --panel: #244f50; --card: #1b4143;
+  --text: var(--ivory);
+  --secondary: color-mix(in srgb, var(--muted-teal) 45%, var(--ivory));
+  --border: var(--muted-teal);
+  --accent: color-mix(in srgb, var(--muted-teal) 55%, var(--ivory));
+  --accentText: var(--surface);
+  --shadow: color-mix(in srgb, var(--surface) 75%, transparent);
 }
 .page * { box-sizing: border-box; }
 .page h1, .page h2, .page h3, .page p { margin: 0; }
@@ -58,7 +68,7 @@
 .cardStack { position: relative; height: 390px; margin: 0 15px; perspective: 1200px; }
 .stackPointer { position: relative; height: 100%; transform-style: preserve-3d; }
 .cardStack[data-hovered='true'] .stackPointer { will-change: transform; }
-.modeCard { position: absolute; inset: 0; border: 1px solid var(--border); border-radius: 20px; background: var(--panel); padding: 30px; display: flex; flex-direction: column; box-shadow: 0 16px 22px -22px #244a4a90; transform-origin: center bottom; }
+.modeCard { position: absolute; inset: 0; border: 1px solid var(--border); border-radius: 20px; background: var(--panel); padding: 30px; display: flex; flex-direction: column; box-shadow: 0 16px 22px -22px var(--shadow); transform-origin: center bottom; }
 .modeCard:nth-child(2) { background: var(--card); }
 .modeCard:nth-child(3) { background: var(--surface); }
 .modeCard[aria-hidden='true'] > * { visibility: hidden; }
@@ -80,7 +90,7 @@
 .projectChapter { position: sticky; top: var(--chapter-top); padding-bottom: 24px; }
 .projectChapters:has(a:focus-visible) .projectChapter { position: relative; top: auto; }
 .chapterScroll { transform-origin: center top; }
-.chapterSurface { position: relative; border: 1px solid var(--border); border-radius: 28px; padding: 36px 44px; background: var(--panel); transform-origin: center top; box-shadow: 0 -20px 60px -48px #123f3b80; }
+.chapterSurface { position: relative; border: 1px solid var(--border); border-radius: 28px; padding: 36px 44px; background: var(--panel); transform-origin: center top; box-shadow: 0 -20px 60px -48px var(--shadow); }
 .projectChapter:nth-child(2) .chapterSurface { background: var(--card); }
 .projectChapter:nth-child(3) .chapterSurface { background: var(--surface); }
 .chapterTop { display: flex; justify-content: space-between; gap: 24px; font-size: 11px; color: var(--secondary); }
@@ -93,7 +103,7 @@
 .chapterBottom a { display: flex; align-items: center; gap: 24px; font-size: 13px; padding: 12px 18px; border: 1px solid var(--border); border-radius: 100px; white-space: nowrap; transition: background .2s, transform .25s; }
 .chapterBottom a:is(:hover, :focus-visible) { background: var(--accent); color: var(--accentText); }
 .chapterBottom a svg { flex-shrink: 0; }
-.chapterSurface::after, .writingHitbox a::after { content: ''; position: absolute; inset: 0; border-radius: inherit; border: 1px solid var(--accent); box-shadow: 0 22px 38px -22px color-mix(in srgb, var(--text) 35%, transparent); opacity: 0; pointer-events: none; transition: opacity .25s; }
+.chapterSurface::after, .writingHitbox a::after { content: ''; position: absolute; inset: 0; border-radius: inherit; border: 1px solid var(--accent); box-shadow: 0 22px 38px -22px var(--shadow); opacity: 0; pointer-events: none; transition: opacity .25s; }
 .chapterSurface:has(a:focus-visible)::after, .writingHitbox a:focus-visible::after { opacity: 1; }
 .signals { display: flex; justify-content: space-between; gap: 36px; margin: 38px 20px 0; }
 .signals > div { max-width: 260px; }
@@ -108,7 +118,7 @@
 .interestPoster { min-width: 0; }
 .posterReveal, .posterHover { height: 100%; }
 .posterHover { position: relative; border-radius: 24px; }
-.posterHover::after { content: ''; position: absolute; inset: 0; border-radius: inherit; border: 1px solid var(--accent); box-shadow: 0 22px 38px -22px color-mix(in srgb, var(--text) 35%, transparent); opacity: 0; pointer-events: none; transition: opacity .25s; }
+.posterHover::after { content: ''; position: absolute; inset: 0; border-radius: inherit; border: 1px solid var(--accent); box-shadow: 0 22px 38px -22px var(--shadow); opacity: 0; pointer-events: none; transition: opacity .25s; }
 .posterHover:has(button:focus-visible)::after { opacity: 1; }
 .interestPoster[data-poster='0'] { grid-row: span 2; }
 .posterInner { min-height: 310px; height: 100%; position: relative; overflow: hidden; border-radius: 24px; padding: 28px; background: var(--panel); display: grid; grid-template-columns: 1fr 110px; grid-template-rows: auto 1fr; gap: 25px; }
