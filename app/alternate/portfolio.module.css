@@ -18,7 +18,7 @@
   --text: var(--ivory);
   --secondary: #c2beb6;
   --border: #73716c;
-  --accent: #d3cec4;
+  --accent: #b8acd6;
   --accentText: var(--surface);
   --shadow: color-mix(in srgb, var(--surface) 75%, transparent);
 }
