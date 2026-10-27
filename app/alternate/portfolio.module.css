@@ -14,11 +14,11 @@
   overflow: clip; isolation: isolate;
 }
 :global([data-theme='dark']) .page {
-  --surface: #123638; --panel: #244f50; --card: #1b4143;
+  --surface: #191919; --panel: #30302f; --card: #252524;
   --text: var(--ivory);
-  --secondary: color-mix(in srgb, var(--muted-teal) 45%, var(--ivory));
-  --border: var(--muted-teal);
-  --accent: color-mix(in srgb, var(--muted-teal) 55%, var(--ivory));
+  --secondary: #c2beb6;
+  --border: #73716c;
+  --accent: #d3cec4;
   --accentText: var(--surface);
   --shadow: color-mix(in srgb, var(--surface) 75%, transparent);
 }
