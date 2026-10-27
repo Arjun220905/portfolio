@@ -1,5 +1,23 @@
 export const projects = [
   {
+    title: 'Lingo',
+    category: 'MEETSTREAM · IN PROGRESS',
+    text: 'An early-stage starter kit for multilingual meetings, planned around live translated captions, speaker attribution, and accessible post-call transcripts.',
+    stack: 'Meeting accessibility · translation · transcripts',
+    href: 'https://github.com/meetstream-ai/lingo',
+    signal: 'In progress · public scope available; implementation to follow',
+    linkLabel: 'Explore project',
+  },
+  {
+    title: 'Universal Agent Adapter',
+    category: 'MEETSTREAM · IN PROGRESS',
+    text: 'A shared adapter contract being scoped to connect external agent runtimes to MIA, without building a separate bridge for every framework.',
+    stack: 'Agent runtimes · integration contracts · MIA',
+    href: 'https://github.com/meetstream-ai/universal-agent-adapter',
+    signal: 'In progress · contract and reference implementation to follow',
+    linkLabel: 'Explore project',
+  },
+  {
     title: 'MeetStream Labs',
     category: 'OPEN SOURCE · DEVELOPER EXPERIENCE',
     text: 'Runnable examples for building meeting bots and AI agents across Zoom, Google Meet, and Microsoft Teams.',
@@ -20,7 +38,7 @@ export const projects = [
     category: 'PERSONAL BUILD · AI PRODUCT',
     text: 'An experiment in turning high-pressure interview moments into useful, context-aware feedback.',
     stack: 'TypeScript · AI workflows · product thinking',
-    href: 'https://github.com/Arjun220905',
+    href: 'https://github.com/Arjun220905/interview-copilot',
     signal: 'An interview-feedback experiment',
   },
 ];

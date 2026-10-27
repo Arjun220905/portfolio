@@ -60,7 +60,7 @@ export default function OriginalPortfolio() {
           <ThemeToggle />
           <a
             className="nav-cta"
-            href="https://www.linkedin.com/in/arjun-m-39b317290/"
+            href="https://www.linkedin.com/in/arjun-manivannan/"
             target="_blank"
             rel="noreferrer"
           >
@@ -331,7 +331,7 @@ export default function OriginalPortfolio() {
         </div>
         <div className="footer-right">
           <a
-            href="https://www.linkedin.com/in/arjun-m-39b317290/"
+            href="https://www.linkedin.com/in/arjun-manivannan/"
             target="_blank"
             rel="noreferrer"
             className="email-link"
@@ -348,7 +348,7 @@ export default function OriginalPortfolio() {
               GH
             </a>
             <a
-              href="https://www.linkedin.com/in/arjun-m-39b317290/"
+              href="https://www.linkedin.com/in/arjun-manivannan/"
               target="_blank"
               rel="noreferrer"
               aria-label="LinkedIn"

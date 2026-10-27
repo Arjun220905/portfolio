@@ -161,9 +161,9 @@ function ProjectChapter({ index }: { index: number }) {
   return <article ref={ref} className={s.projectChapter} style={{ '--chapter-top': `${24 + index * 24}px` } as CSSProperties} {...hover.handlers}>
     <motion.div className={s.chapterScroll} style={reduced ? undefined : { transform }}>
       <motion.div className={s.chapterSurface} style={hover.style}>
-        <div className={s.chapterTop}><span>{project.category}</span><span>0{index + 1} / 03</span></div>
+        <div className={s.chapterTop}><span>{project.category}</span><span>{String(index + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}</span></div>
         <div className={s.chapterGrid}><h3>{project.title}</h3><p>{project.text}</p></div>
-        <div className={s.chapterBottom}><div><span>{project.stack}</span><p>{project.signal}</p></div><a href={project.href} target="_blank" rel="noreferrer">View source <ArrowUpRight size={22} /></a></div>
+        <div className={s.chapterBottom}><div><span>{project.stack}</span><p>{project.signal}</p></div><a href={project.href} target="_blank" rel="noreferrer">{project.linkLabel ?? 'View source'} <ArrowUpRight size={22} /></a></div>
       </motion.div>
     </motion.div>
   </article>;
