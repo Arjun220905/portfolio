@@ -2,7 +2,7 @@ export const projects = [
   {
     title: 'Lingo',
     category: 'MEETSTREAM · COMPLETED',
-    text: 'Live translated captions and a searchable meeting workspace, with speaker-attributed transcripts, recordings, and accessible exports. Includes a movable Chrome caption overlay.',
+    text: 'Turns multilingual meetings into live, speaker-attributed captions and searchable transcripts. Combines speech and translation providers with SQLite-backed jobs and a Chrome overlay.',
     stack: 'Node.js · SQLite · Chrome extension · translation APIs',
     href: 'https://github.com/meetstream-ai/lingo',
     signal: 'Up to eight transcript languages · VTT, SRT and portable exports',
@@ -11,7 +11,7 @@ export const projects = [
   {
     title: 'Universal Agent Adapter',
     category: 'MEETSTREAM · COMPLETED',
-    text: 'A Python SDK connecting external agent runtimes to MeetStream MIA. The local meeting pilot supports runtime switching, streaming responses, shared tools, and bounded conversation history.',
+    text: 'Unifies four agent frameworks behind one Python contract for MIA. The local pilot switches runtimes mid-meeting with streaming, cancellation, shared tools, and bounded conversation history.',
     stack: 'Python · streaming · runtime adapters · MIA',
     href: 'https://github.com/meetstream-ai/universal-agent-adapter',
     signal: 'OpenAI Agents SDK · Google ADK · CrewAI · LangGraph',
