@@ -1,26 +1,23 @@
-/* Ivory and teal: isolated palette, physical cards, no global overrides. */
+/* Cloud blue: isolated palette, physical cards, no global overrides. */
 .page {
-  --ivory: #f6f2e8; --teal: #175f60; --muted-teal: #6e9290;
-  --surface: var(--ivory);
-  --panel: color-mix(in srgb, var(--muted-teal) 32%, var(--ivory));
-  --card: color-mix(in srgb, var(--muted-teal) 14%, var(--ivory));
-  --text: #143d3f; --secondary: #365e5e;
-  --border: color-mix(in srgb, var(--muted-teal) 65%, var(--ivory));
-  --accent: var(--teal); --accentText: var(--ivory);
-  --shadow: color-mix(in srgb, var(--teal) 40%, transparent);
+  --surface: #f5f6f7; --panel: #e5e9ef; --card: #eef0f3;
+  --text: #20242b; --secondary: #565f6d;
+  --border: #c9ced7;
+  --accent: #4d6383; --accentText: #fafbfd;
+  --shadow: #7285a626; --wash: #596b8a22;
   --reveal-distance: 88px;
-  min-height: 100dvh; background: var(--surface); color: var(--text);
+  min-height: 100dvh; background: radial-gradient(ellipse 780px 620px at 76% 320px, var(--wash), transparent 80%), var(--surface); color: var(--text);
   font: 16px/1.6 var(--alternate-font), Arial, sans-serif;
   overflow: clip; isolation: isolate;
 }
 :global([data-theme='dark']) .page {
-  --surface: #191919; --panel: #30302f; --card: #252524;
-  --text: var(--ivory);
-  --secondary: #c2beb6;
-  --border: #73716c;
-  --accent: #b8acd6;
-  --accentText: var(--surface);
-  --shadow: color-mix(in srgb, var(--surface) 75%, transparent);
+  --surface: #191c21; --panel: #292f38; --card: #22272f;
+  --text: #f0f2f5;
+  --secondary: #b3bbc8;
+  --border: #454e5c;
+  --accent: #a3b5d2;
+  --accentText: #1b222d;
+  --shadow: #00000066; --wash: #7791ba17;
 }
 .page * { box-sizing: border-box; }
 .page h1, .page h2, .page h3, .page p { margin: 0; }
