@@ -5,6 +5,7 @@
   --border: #c9ced7;
   --accent: #4d6383; --accentText: #fafbfd;
   --shadow: #7285a626; --wash: #596b8a22;
+  --card-hover: color-mix(in srgb, var(--accent) 12%, var(--panel));
   --reveal-distance: 88px;
   min-height: 100dvh; background: radial-gradient(ellipse 780px 620px at 76% 320px, var(--wash), transparent 80%), var(--surface); color: var(--text);
   font: 16px/1.6 var(--alternate-font), Arial, sans-serif;
@@ -176,6 +177,12 @@
   0%, 100% { transform: translate(0, 0); opacity: 1; }
   45% { transform: translate(12px, -12px); opacity: 0; }
   46% { transform: translate(-12px, 12px); opacity: 0; }
+}
+.chapterSurface, .posterInner { transition: background-color .25s, border-color .25s; }
+.chapterSurface:has(a:focus-visible), .interestPoster:has(button:focus-visible) .posterInner { background: var(--card-hover); }
+@media (hover: hover) and (pointer: fine) {
+  .projectChapter:hover .chapterSurface { background: var(--card-hover); border-color: var(--accent); }
+  .interestPoster:hover .posterInner { background: var(--card-hover); }
 }
 @media (min-width: 768px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .interestPoster:hover .posterHover::after { opacity: 1; }
