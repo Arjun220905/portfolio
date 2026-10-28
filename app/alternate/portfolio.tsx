@@ -1,6 +1,5 @@
-import Link from 'next/link';
 import { Geist } from 'next/font/google';
-import { ArrowDown, ArrowUpRight, ArrowLeft } from 'lucide-react';
+import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { ColorMode, HeroTitle, MagneticLink, OutsideBuild, ProjectIndex, Reveal, WorkModes, WritingLink } from './interactions';
 import { articles } from './content';
 import s from './portfolio.module.css';
@@ -58,7 +57,7 @@ export default function AlternatePortfolio() {
       </main>
       <footer className={s.footer}>
         <Reveal><h2>Let&apos;s start a<br /><a href="https://www.linkedin.com/in/arjun-manivannan/" target="_blank" rel="noreferrer">conversation.<ArrowUpRight aria-hidden="true" /></a></h2></Reveal>
-        <div className={s.footerBottom}><Link href="/alternate" className={s.originalLink}><ArrowLeft size={15} /> Original portfolio</Link><div><a href="https://github.com/Arjun220905" target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={14} /></a><a href="https://www.linkedin.com/in/arjun-manivannan/" target="_blank" rel="noreferrer">LinkedIn <ArrowUpRight size={14} /></a><a href="https://x.com/arjunlarps" target="_blank" rel="noreferrer">X <ArrowUpRight size={14} /></a></div><span>© 2026 Arjun M</span></div>
+        <div className={s.footerBottom}><div><a href="https://github.com/Arjun220905" target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={14} /></a><a href="https://www.linkedin.com/in/arjun-manivannan/" target="_blank" rel="noreferrer">LinkedIn <ArrowUpRight size={14} /></a><a href="https://x.com/arjunlarps" target="_blank" rel="noreferrer">X <ArrowUpRight size={14} /></a></div><span>© 2026 Arjun M</span></div>
       </footer>
     </div>
   </div>;

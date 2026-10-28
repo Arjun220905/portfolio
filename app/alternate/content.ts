@@ -20,7 +20,7 @@ export const projects = [
   {
     title: 'MeetStream Labs',
     category: 'OPEN SOURCE · DEVELOPER EXPERIENCE',
-    text: 'Runnable examples for building meeting bots and AI agents across Zoom, Google Meet, and Microsoft Teams.',
+    text: 'Turns meeting APIs into runnable Node.js examples across Zoom, Google Meet, and Teams, covering transcription, real-time media, agent workflows, and webhook reliability.',
     stack: 'Webhooks · real-time media · Node.js',
     href: 'https://github.com/meetstream-ai/labs',
     signal: 'Meeting tools and developer resources',
@@ -28,7 +28,7 @@ export const projects = [
   {
     title: 'MIA Chat Agent',
     category: 'MEETSTREAM · AGENT WORKFLOW',
-    text: 'A meeting chat agent that listens for a wake phrase, routes a request through a hosted agent, and posts the answer back into the call.',
+    text: 'Deploys a hosted, wake-word-activated assistant into live meetings. Handles agent configuration, lifecycle webhooks, and confirmed bot removal, with answers delivered in meeting chat.',
     stack: 'Webhooks · ngrok · Node.js',
     href: 'https://github.com/meetstream-ai/labs/tree/main/MIA-chat-agent',
     signal: 'A meeting chat assistant',
@@ -36,8 +36,8 @@ export const projects = [
   {
     title: 'Interview Copilot',
     category: 'PERSONAL BUILD · AI PRODUCT',
-    text: 'An experiment in turning high-pressure interview moments into useful, context-aware feedback.',
-    stack: 'TypeScript · AI workflows · product thinking',
+    text: 'A full-stack interview prototype with live captions, rule-based speech feedback, and session replay analytics. Handles caption revisions and deduplication, with transcripts persisted in MongoDB.',
+    stack: 'TypeScript · Socket.IO · MongoDB · MeetStream API',
     href: 'https://github.com/Arjun220905/interview-copilot',
     signal: 'An interview-feedback experiment',
   },
