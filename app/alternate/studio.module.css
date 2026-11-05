@@ -56,9 +56,6 @@
 .textLink svg { transition:transform .3s; }
 .textLink:hover svg { transform:translate(4px,4px); }
 .sculptureWrap { position:relative; align-self:center; width:110%; margin-left:-5%; z-index:1; }
-.sculpture { position:relative; width:100%; border:0; padding:0; background:none; perspective:900px; text-align:center; }
-.sculptureTilt { transform-style:preserve-3d; }
-.sculpture svg { width:100%; height:auto; filter:drop-shadow(0 35px 25px #172b4528); }
 .heroAside { z-index:2; align-self:center; padding-left:20px; }
 .smallLabel { font-size:10px; color:var(--muted); }
 .heroAside p { font-size:13px; line-height:1.7; margin-top:15px; max-width:240px; }
@@ -332,7 +329,7 @@
 }
 @media(prefers-reduced-motion:reduce) {
   .page *, .page *::before, .page *::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
-  .sculptureTilt,.studyMotion { transform:none!important; }
+  .studyMotion { transform:none!important; }
 }
 
 @media(max-width:900px) { .desktopNav { display:none; } }

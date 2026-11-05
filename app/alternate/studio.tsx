@@ -1,12 +1,14 @@
 'use client';
 
-import Link from 'next/link';
+import { usePrefersReducedMotion } from './use-reduced-motion';
+
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
-import { motion, MotionConfig, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from 'motion/react';
+import { motion, MotionConfig, useScroll, useTransform, type MotionValue } from 'motion/react';
 import { ArrowDown, ArrowUpRight, ArrowUp, Plus, X, Sun, Moon, RotateCcw, Braces, AudioLines, GitBranch, MessageSquare, Radio, Check } from 'lucide-react';
 import { projects, interests } from './content';
 import { CinemaFrame, CompactDisc, KnightPuzzle } from './studio-interests';
 import { studioArticles } from './studio-writing';
+import { TrojanHorse } from './trojan-horse';
 import s from './studio.module.css';
 
 const ease = [.22, 1, .36, 1] as const;
@@ -14,7 +16,7 @@ const links = [['Work', '#studio-work'], ['About', '#studio-about'], ['Outside t
 const social = [['GitHub', 'https://github.com/Arjun220905'], ['LinkedIn', 'https://www.linkedin.com/in/arjun-manivannan/'], ['X', 'https://x.com/arjunlarps']];
 
 function Entrance({ children, className = '' }: { children: ReactNode; className?: string }) {
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
   return <motion.div className={className} initial={reduced ? false : { opacity: 1, transform: 'translateY(45px)' }} whileInView={{ opacity: 1, transform: 'translateY(0px)' }} viewport={{ once: false, amount: .12 }} transition={{ duration: reduced ? 0 : .8, ease }}>{children}</motion.div>;
 }
 
@@ -37,39 +39,21 @@ function Navigation() {
     <dialog ref={dialog} className={s.menu} onCancel={() => setMenu(false)} onClose={() => setMenu(false)} aria-label="Portfolio index">
       <div className={s.menuTop}><span>Arjun M / Index</span><button className={s.round} onClick={close} aria-label="Close navigation"><X /></button></div>
       <nav>{links.map(([label, href], i) => <a href={href} onClick={close} key={label}><span>0{i + 1}</span>{label}<ArrowUpRight /></a>)}</nav>
-      <div className={s.menuBottom}><Link href="/alternate">Alternate portfolio <ArrowUpRight size={16} /></Link><span>Backend systems. Human explanations.</span></div>
+      <div className={s.menuBottom}><span>Backend systems. Human explanations.</span></div>
     </dialog>
   </>;
 }
 
-function SignalSculpture() {
-  const reduced = useReducedMotion();
-  const x = useMotionValue(0), y = useMotionValue(0);
-  const rx = useSpring(y, { stiffness: 100, damping: 24 });
-  const ry = useSpring(x, { stiffness: 100, damping: 24 });
-  const [turns, setTurns] = useState(0);
-  return <button className={s.sculpture} aria-label="Rotate the signal sculpture" onClick={() => setTurns(v => v + 1)} onPointerMove={e => { if (reduced || e.pointerType !== 'mouse') return; const r = e.currentTarget.getBoundingClientRect(); x.set((e.clientX - r.left - r.width / 2) / 18); y.set(-(e.clientY - r.top - r.height / 2) / 18); }} onPointerLeave={() => { x.set(0); y.set(0); }}>
-    <motion.div className={s.sculptureTilt} style={reduced ? undefined : { rotateX: rx, rotateY: ry }}>
-      <motion.svg viewBox="0 0 600 600" aria-hidden="true" animate={{ rotate: reduced ? 0 : turns * 90 }} transition={{ type: 'spring', stiffness: 45, damping: 16 }}>
-        <defs><linearGradient id="studio-metal" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#eef4fc"/><stop offset=".24" stopColor="#8196b2"/><stop offset=".46" stopColor="#dae6f4"/><stop offset=".66" stopColor="#354c6a"/><stop offset=".85" stopColor="#9fb5d1"/><stop offset="1" stopColor="#f2f7ff"/></linearGradient></defs>
-        <g transform="translate(300 300) rotate(-32)">{Array.from({ length: 25 }, (_, i) => <ellipse key={i} cx="0" cy={(i - 12) * 6} rx={155 + Math.sin(i / 24 * Math.PI) * 35} ry={66 + Math.sin(i / 24 * Math.PI) * 15} fill="none" stroke="url(#studio-metal)" strokeWidth="9" />)}</g>
-        <circle cx="300" cy="300" r="257" fill="none" stroke="currentColor" strokeWidth=".7" strokeDasharray="2 9" opacity=".3"/>
-        <path d="M300 29v22M300 549v22M29 300h22M549 300h22" stroke="currentColor" opacity=".4" />
-      </motion.svg>
-    </motion.div>
-  </button>;
-}
-
 function Hero() {
   const ref = useRef<HTMLElement>(null);
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const y = useTransform(scrollYProgress, [0, 1], [0, 130]);
   return <section ref={ref} id="studio-top" className={s.hero}>
     <div className={s.heroOverline}><span><span className={s.statusDot} /> Developer relations × backend systems</span></div>
     <div className={s.heroStage}>
       <motion.div className={s.heroStatement} initial={{ opacity: 0, transform: 'translateY(24px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} transition={{ duration: .9, ease }}><h1>Building things.<br/>Making sense<br/>of them.</h1><a className={s.textLink} href="#studio-work">Explore the work <ArrowDown size={18}/></a></motion.div>
-      <motion.div className={s.sculptureWrap} style={reduced ? undefined : { y }}><SignalSculpture /></motion.div>
+      <motion.div className={s.sculptureWrap} style={reduced ? undefined : { y }}><TrojanHorse /></motion.div>
       <div className={s.heroAside}><span className={s.smallLabel}>A little context</span><p>I build backend tools and explain how to use them, so a good idea can become a working integration.</p><a href="https://www.linkedin.com/in/arjun-manivannan/" target="_blank" rel="noreferrer" className={s.circleLink} aria-label="Connect with Arjun on LinkedIn"><ArrowUpRight /></a></div>
     </div>
     <div className={s.heroBottom}><span>Systems that work. Stories that make sense.</span><a href="#studio-work">Scroll to explore <ArrowDown size={14} /></a></div>
@@ -78,7 +62,7 @@ function Hero() {
 
 function Word({ word, index, total, progress }: { word: string; index: number; total: number; progress: MotionValue<number> }) {
   const opacity = useTransform(progress, [index / total * .8, index / total * .8 + .2], [.6, 1]);
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
   return <motion.span aria-hidden="true" style={{ opacity: reduced ? 1 : opacity }}>{word} </motion.span>;
 }
 
@@ -101,7 +85,7 @@ function ProjectStudy({ index }: { index: number }) {
 
 function Project({ index }: { index: number }) {
   const ref = useRef<HTMLElement>(null);
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   const y = useTransform(scrollYProgress, [0, 1], [45, -45]);
   const rotate = useTransform(scrollYProgress, [0, .5, 1], [2, 0, -2]);
@@ -135,5 +119,5 @@ function Writing() {
 }
 
 export default function Studio() {
-  return <MotionConfig reducedMotion="user"><div className={s.page}><a href="#studio-main" className={s.skip}>Skip to content</a><Navigation/><main id="studio-main"><Hero/><Manifesto/><section id="studio-work" className={s.work}><div className={s.workHeading}><div className={s.sectionMarker}><span className={s.marker}/><span>Selected work / five projects</span></div><h2>Built to be<br/><span>used.</span><ArrowDown aria-hidden="true"/></h2><p>Backend work, AI workflows, and the developer experience around them.</p></div>{projects.map((p, index) => <Project key={p.title} index={index}/>)}</section><section id="studio-about" className={s.about}><div className={s.sectionMarker}><span className={s.marker}/><span>The person behind the work</span></div><Entrance><h2>Make unfamiliar<br/>work easier<br/>to start.</h2></Entrance><div className={s.aboutBody}><p>I&apos;m Arjun, a Computer Science student and Developer Relations &amp; Go-to-Market intern at <a href="https://meetstream.ai" target="_blank" rel="noreferrer">MeetStream</a>.</p><p>I work across backend engineering, developer experience, technical content, and go-to-market. I&apos;m interested in the practical details that help developers move from an API reference to something running.</p><div className={s.principles}>{['Start with something runnable.', 'Make the next step clear.', 'Let good defaults do some work.'].map(v => <div key={v}><ArrowUpRight size={18}/>{v}</div>)}</div></div></section><OutsideTheBuild/><Writing/></main><footer className={s.footer}><div className={s.footerTop}><span>Have something interesting in mind?</span><a href="#studio-top">Back to top <ArrowUp size={16}/></a></div><a className={s.footerHeadline} href="https://www.linkedin.com/in/arjun-manivannan/" target="_blank" rel="noreferrer"><span>Let&apos;s talk.</span><ArrowUpRight/></a><div className={s.footerBottom}><span>Arjun M / Building & explaining</span><div>{social.map(([name, href]) => <a href={href} key={name} target="_blank" rel="noreferrer">{name}<ArrowUpRight size={14}/></a>)}</div><Link href="/alternate">Alternate portfolio <ArrowUpRight size={14}/></Link><span>© 2026</span></div></footer></div></MotionConfig>;
+  return <MotionConfig reducedMotion="user"><div className={s.page}><a href="#studio-main" className={s.skip}>Skip to content</a><Navigation/><main id="studio-main"><Hero/><Manifesto/><section id="studio-work" className={s.work}><div className={s.workHeading}><div className={s.sectionMarker}><span className={s.marker}/><span>Selected work / five projects</span></div><h2>Built to be<br/><span>used.</span><ArrowDown aria-hidden="true"/></h2><p>Backend work, AI workflows, and the developer experience around them.</p></div>{projects.map((p, index) => <Project key={p.title} index={index}/>)}</section><section id="studio-about" className={s.about}><div className={s.sectionMarker}><span className={s.marker}/><span>The person behind the work</span></div><Entrance><h2>Make unfamiliar<br/>work easier<br/>to start.</h2></Entrance><div className={s.aboutBody}><p>I&apos;m Arjun, a Computer Science student and Developer Relations &amp; Go-to-Market intern at <a href="https://meetstream.ai" target="_blank" rel="noreferrer">MeetStream</a>.</p><p>I work across backend engineering, developer experience, technical content, and go-to-market. I&apos;m interested in the practical details that help developers move from an API reference to something running.</p><div className={s.principles}>{['Start with something runnable.', 'Make the next step clear.', 'Let good defaults do some work.'].map(v => <div key={v}><ArrowUpRight size={18}/>{v}</div>)}</div></div></section><OutsideTheBuild/><Writing/></main><footer className={s.footer}><div className={s.footerTop}><span>Have something interesting in mind?</span><a href="#studio-top">Back to top <ArrowUp size={16}/></a></div><a className={s.footerHeadline} href="https://www.linkedin.com/in/arjun-manivannan/" target="_blank" rel="noreferrer"><span>Let&apos;s talk.</span><ArrowUpRight/></a><div className={s.footerBottom}><span>Arjun M / Building & explaining</span><div>{social.map(([name, href]) => <a href={href} key={name} target="_blank" rel="noreferrer">{name}<ArrowUpRight size={14}/></a>)}</div><span>© 2026</span></div></footer></div></MotionConfig>;
 }
