@@ -4,7 +4,13 @@ import { useEffect, useId, useRef, useState, type PointerEvent } from 'react';
 import { animate, motion, useMotionValue, useSpring, useTransform, type AnimationPlaybackControls } from 'motion/react';
 import { usePrefersReducedMotion } from './use-reduced-motion';
 import type { TopScene } from './top-scene';
+import { topProfile, topRestAngle } from './top-profile';
 import s from './inception-top.module.css';
+
+const fallbackOutline = `M${[
+  ...topProfile.map(([r, y]) => `${300 - r * 165},${460 - y * 165}`),
+  ...[...topProfile].reverse().map(([r, y]) => `${300 + r * 165},${460 - y * 165}`),
+].join('L')}Z`;
 
 export function InceptionTop() {
   const id = useId().replace(/:/g, '');
@@ -35,7 +41,7 @@ export function InceptionTop() {
     stop();
     if (reduced) {
       tiltX.set(0);
-      tiltZ.set(tiltZ.get() < -.4 ? 0 : -.85);
+      tiltZ.set(tiltZ.get() < -.4 ? 0 : -topRestAngle);
       return;
     }
     const base = angle.get(), startX = tiltX.get(), startZ = tiltZ.get();
@@ -54,7 +60,7 @@ export function InceptionTop() {
         const precession = rotation * .24;
         angle.set(rotation);
         tiltX.set(startX * (1 - upright) + Math.sin(precession) * wobble * upright * (1 - settle));
-        tiltZ.set(startZ * (1 - upright) + Math.cos(precession) * wobble * upright * (1 - settle) - .85 * settle);
+        tiltZ.set(startZ * (1 - upright) + Math.cos(precession) * wobble * upright * (1 - settle) - topRestAngle * settle);
       },
       onComplete() { animation.current = null; setSpinning(false); },
     });
@@ -170,12 +176,11 @@ export function InceptionTop() {
     <output className={s.srOnly}>{spinning ? 'Spinning.' : 'Ready for another spin.'}</output>
     <div className={s.fallback} aria-hidden="true">
       <svg viewBox="0 0 600 600" focusable="false">
-        <defs><linearGradient id={`${id}-steel`}><stop stopColor="#475461"/><stop offset=".25" stopColor="#d2d9e0"/><stop offset=".48" stopColor="#7b8794"/><stop offset=".7" stopColor="#e1e7ed"/><stop offset="1" stopColor="#566270"/></linearGradient></defs>
+        <defs><linearGradient id={`${id}-steel`}><stop stopColor="#30383e"/><stop offset=".25" stopColor="#a3adb6"/><stop offset=".48" stopColor="#4a555f"/><stop offset=".7" stopColor="#b7c0c8"/><stop offset="1" stopColor="#363f47"/></linearGradient></defs>
         <ellipse cx="300" cy="465" rx="100" ry="13" fill="currentColor" opacity=".08"/>
         <motion.g style={{ rotate: fallbackTilt, originX: .5, originY: 1 }}>
-          <path d="M300 460C287 418 223 375 180 346Q170 335 183 330L281 285 286 172Q270 155 283 149Q300 140 317 149Q330 155 314 172L319 285 417 330Q430 335 420 346C377 375 313 418 300 460Z" fill={`url(#${id}-steel)`}/>
-          <ellipse cx="300" cy="337" rx="122" ry="26" fill={`url(#${id}-steel)`} stroke="#cad4dd" strokeWidth="2"/>
-          <path d="M181 337Q300 373 419 337" fill="none" stroke="#4d5966" strokeWidth="2"/>
+          <path d={fallbackOutline} fill={`url(#${id}-steel)`}/>
+          <path d="M160 364Q300 383 440 364" fill="none" stroke="#bac3cb" strokeWidth="1.5"/>
         </motion.g>
       </svg>
     </div>

@@ -1,13 +1,6 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-
-// A turned-metal profile: pointed foot, flared skirt, narrow stem and rounded grip.
-const profile = [
-  [0, 0], [.025, .025], [.04, .09], [.12, .22], [.29, .43], [.5, .65],
-  [.69, .81], [.76, .865], [.765, .88], [.75, .9], [.61, .94],
-  [.41, 1.035], [.23, 1.15], [.12, 1.25], [.075, 1.31], [.068, 1.67],
-  [.075, 1.74], [.105, 1.78], [.11, 1.81], [.095, 1.84], [0, 1.85],
-];
+import { topProfile as profile } from './top-profile';
 
 export function createTopScene(canvas: HTMLCanvasElement) {
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
@@ -41,7 +34,7 @@ export function createTopScene(canvas: HTMLCanvasElement) {
   const grain = new THREE.DataTexture(grainData, 256, 256);
   grain.wrapS = grain.wrapT = THREE.RepeatWrapping;
   grain.needsUpdate = true;
-  const metal = new THREE.MeshStandardMaterial({ color: '#a6aeb7', metalness: 1, roughness: .44, roughnessMap: grain, bumpMap: grain, bumpScale: .0007, envMapIntensity: 1.25 });
+  const metal = new THREE.MeshStandardMaterial({ color: '#4c5054', metalness: 1, roughness: .38, roughnessMap: grain, bumpMap: grain, bumpScale: .00025, envMapIntensity: 1.25 });
   const geometry = new THREE.LatheGeometry(profile.map(([r, y]) => new THREE.Vector2(r, y)), 128);
   const top = new THREE.Mesh(geometry, metal);
   const pivot = new THREE.Group();
@@ -49,11 +42,11 @@ export function createTopScene(canvas: HTMLCanvasElement) {
   scene.add(pivot);
 
   // A shallow imperfection catches the light once per turn, making the spin legible.
-  const seamGeometry = new THREE.TorusGeometry(.756, .003, 5, 96, .13);
+  const seamGeometry = new THREE.TorusGeometry(.85, .002, 5, 96, .13);
   const seamMaterial = new THREE.MeshStandardMaterial({ color: '#56616e', metalness: 1, roughness: .48 });
   const seam = new THREE.Mesh(seamGeometry, seamMaterial);
   seam.rotation.x = Math.PI / 2;
-  seam.position.y = .881;
+  seam.position.y = .588;
   top.add(seam);
 
   const key = new THREE.DirectionalLight('#ffffff', 2.5);
@@ -83,8 +76,8 @@ export function createTopScene(canvas: HTMLCanvasElement) {
   return {
     resize(width: number) { renderer.setSize(width, width, false); },
     theme(dark: boolean) {
-      metal.color.set(dark ? '#9da9b7' : '#9aa4ae');
-      metal.envMapIntensity = dark ? 1.35 : 1.25;
+      metal.color.set(dark ? '#626a73' : '#4c5054');
+      metal.envMapIntensity = dark ? 1.4 : 1.25;
       shadowMaterial.opacity = dark ? .5 : 1;
     },
     draw(angle: number, tiltX: number, tiltZ: number, viewX: number, viewY: number) {
