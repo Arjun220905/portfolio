@@ -8,7 +8,7 @@ import { ArrowDown, ArrowUpRight, ArrowUp, Plus, X, Sun, Moon, RotateCcw, Braces
 import { projects, interests } from './content';
 import { CinemaFrame, CompactDisc, KnightPuzzle } from './studio-interests';
 import { studioArticles } from './studio-writing';
-import { TrojanHorse } from './trojan-horse';
+import { InceptionTop } from './inception-top';
 import s from './studio.module.css';
 
 const ease = [.22, 1, .36, 1] as const;
@@ -53,7 +53,7 @@ function Hero() {
     <div className={s.heroOverline}><span><span className={s.statusDot} /> Developer relations × backend systems</span></div>
     <div className={s.heroStage}>
       <motion.div className={s.heroStatement} initial={{ opacity: 0, transform: 'translateY(24px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} transition={{ duration: .9, ease }}><h1>Building things.<br/>Making sense<br/>of them.</h1><a className={s.textLink} href="#studio-work">Explore the work <ArrowDown size={18}/></a></motion.div>
-      <motion.div className={s.sculptureWrap} style={reduced ? undefined : { y }}><TrojanHorse /></motion.div>
+      <motion.div className={s.sculptureWrap} style={reduced ? undefined : { y }}><InceptionTop /></motion.div>
       <div className={s.heroAside}><span className={s.smallLabel}>A little context</span><p>I build backend tools and explain how to use them, so a good idea can become a working integration.</p><a href="https://www.linkedin.com/in/arjun-manivannan/" target="_blank" rel="noreferrer" className={s.circleLink} aria-label="Connect with Arjun on LinkedIn"><ArrowUpRight /></a></div>
     </div>
     <div className={s.heroBottom}><span>Systems that work. Stories that make sense.</span><a href="#studio-work">Scroll to explore <ArrowDown size={14} /></a></div>

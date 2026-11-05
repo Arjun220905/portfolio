@@ -1,0 +1,23 @@
+.stage {
+  display:block;
+  position:relative;
+  width:100%;
+  aspect-ratio:1;
+  padding:0;
+  border:0;
+  background:none;
+  cursor:grab!important;
+  touch-action:pan-y;
+  user-select:none;
+  -webkit-user-select:none;
+}
+.stage:active { cursor:grabbing!important; }
+.stage:focus-visible { border-radius:50%; outline-offset:-35px!important; }
+.canvas,.fallback { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; transition:opacity .25s; }
+.canvas { opacity:0; }
+.fallback { color:var(--ink); }
+.fallback svg { display:block; width:100%; height:100%; overflow:visible; }
+.stage[data-renderer='webgl'] .canvas { opacity:1; }
+.stage[data-renderer='webgl'] .fallback { opacity:0; }
+.srOnly { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+@media(prefers-reduced-motion:reduce) { .canvas,.fallback { transition:none; } }
