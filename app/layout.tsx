@@ -6,7 +6,7 @@ import './cinematic.css';
 
 const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-dm', display: 'swap' });
 
-export const metadata: Metadata = { title: 'Arjun M — Developer Relations × Backend Systems', description: 'Arjun M builds practical infrastructure and developer experiences around APIs, AI workflows, and real-time systems.' };
+export const metadata: Metadata = { title: 'Arjun M — AI Agent Automation × Backend Systems', description: 'Arjun M is an AI Agent Automation Intern at MeetStream.ai, working across AI agent workflows and backend systems, with a background in developer relations and go-to-market.' };
 
 const themeScript = `try { const saved = localStorage.getItem('arjun-portfolio-theme'); const theme = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); document.documentElement.dataset.theme = theme; } catch {}`;
 
