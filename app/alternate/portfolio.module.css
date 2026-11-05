@@ -8,7 +8,7 @@
   --card-hover: color-mix(in srgb, var(--accent) 12%, var(--panel));
   --reveal-distance: 88px;
   min-height: 100dvh; background: radial-gradient(ellipse 780px 620px at 76% 320px, var(--wash), transparent 80%), var(--surface); color: var(--text);
-  font: 16px/1.6 var(--alternate-font), Arial, sans-serif;
+  font: 16px/1.6 var(--font-dm), Arial, sans-serif;
   overflow: clip; isolation: isolate;
 }
 :global([data-theme='dark']) .page {
@@ -159,7 +159,7 @@
 .footer h2 svg { width: .75em; height: .75em; transition: transform .35s ease; }
 .footer h2 a:hover svg { transform: translate(10px,-10px) rotate(8deg); }
 .footerBottom { margin-top: 65px; display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 11px; color: var(--secondary); }
-.footerBottom > div { display: flex; gap: 24px; }
+.footerBottom > div { display: flex; flex-wrap: wrap; gap: 24px; }
 .footerBottom a { display: inline-flex; align-items: center; gap: 7px; padding: 12px 0; }
 .footerBottom a:hover { text-decoration: underline; text-underline-offset: 4px; }
 .revealInner { min-width: 0; transform-origin: left bottom; }

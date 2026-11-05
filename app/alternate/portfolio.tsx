@@ -1,13 +1,11 @@
-import { Geist } from 'next/font/google';
+import Link from 'next/link';
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { ColorMode, HeroTitle, MagneticLink, OutsideBuild, ProjectIndex, Reveal, WorkModes, WritingLink } from './interactions';
 import { articles } from './content';
 import s from './portfolio.module.css';
 
-const geist = Geist({ subsets: ['latin'], variable: '--alternate-font', display: 'swap' });
-
 export default function AlternatePortfolio() {
-  return <div className={`${s.page} ${geist.variable}`}>
+  return <div className={s.page}>
     <a className={s.skipLink} href="#main-content">Skip to content</a>
     <div className={s.shell}>
       <header className={s.header}>
@@ -57,7 +55,7 @@ export default function AlternatePortfolio() {
       </main>
       <footer className={s.footer}>
         <Reveal><h2>Let&apos;s start a<br /><a href="https://www.linkedin.com/in/arjun-manivannan/" target="_blank" rel="noreferrer">conversation.<ArrowUpRight aria-hidden="true" /></a></h2></Reveal>
-        <div className={s.footerBottom}><div><a href="https://github.com/Arjun220905" target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={14} /></a><a href="https://www.linkedin.com/in/arjun-manivannan/" target="_blank" rel="noreferrer">LinkedIn <ArrowUpRight size={14} /></a><a href="https://x.com/arjunlarps" target="_blank" rel="noreferrer">X <ArrowUpRight size={14} /></a></div><span>© 2026 Arjun M</span></div>
+        <div className={s.footerBottom}><div><a href="https://github.com/Arjun220905" target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={14} /></a><a href="https://www.linkedin.com/in/arjun-manivannan/" target="_blank" rel="noreferrer">LinkedIn <ArrowUpRight size={14} /></a><a href="https://x.com/arjunlarps" target="_blank" rel="noreferrer">X <ArrowUpRight size={14} /></a><Link href="/">Current portfolio <ArrowUpRight size={14} /></Link></div><span>© 2026 Arjun M</span></div>
       </footer>
     </div>
   </div>;

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { motion, MotionConfig, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from 'motion/react';
 import { ArrowDown, ArrowUpRight, ArrowUp, Plus, X, Sun, Moon, RotateCcw, Braces, AudioLines, GitBranch, MessageSquare, Radio, Check } from 'lucide-react';
 import { projects, interests } from './content';
@@ -10,7 +10,7 @@ import { studioArticles } from './studio-writing';
 import s from './studio.module.css';
 
 const ease = [.22, 1, .36, 1] as const;
-const links = [['Work', '#studio-work'], ['About', '#studio-about'], ['Off duty', '#studio-outside'], ['Writing', '#studio-writing']];
+const links = [['Work', '#studio-work'], ['About', '#studio-about'], ['Outside the build', '#studio-outside'], ['Writing', '#studio-writing']];
 const social = [['GitHub', 'https://github.com/Arjun220905'], ['LinkedIn', 'https://www.linkedin.com/in/arjun-manivannan/'], ['X', 'https://x.com/arjunlarps']];
 
 function Entrance({ children, className = '' }: { children: ReactNode; className?: string }) {
@@ -31,13 +31,13 @@ function Navigation() {
   return <>
     <header className={s.header}>
       <a href="#studio-top" className={s.wordmark}>Arjun M<span>Developer & explainer</span></a>
-      <nav aria-label="Alternate portfolio navigation" className={s.desktopNav}>{links.map(([label, href]) => <a key={label} href={href}>{label}</a>)}</nav>
+      <nav aria-label="Primary navigation" className={s.desktopNav}>{links.map(([label, href]) => <a key={label} href={href}>{label}</a>)}</nav>
       <div className={s.navActions}><button className={s.round} aria-label="Toggle light and dark mode" onClick={() => { const t = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = t; try { localStorage.setItem('arjun-portfolio-theme', t); } catch {} }}><Sun className={s.sun} size={18} /><Moon className={s.moon} size={18} /></button><button className={s.menuButton} aria-haspopup="dialog" aria-expanded={menu} onClick={() => { dialog.current?.showModal(); setMenu(true); }}>Index <Plus size={18} /></button></div>
     </header>
     <dialog ref={dialog} className={s.menu} onCancel={() => setMenu(false)} onClose={() => setMenu(false)} aria-label="Portfolio index">
       <div className={s.menuTop}><span>Arjun M / Index</span><button className={s.round} onClick={close} aria-label="Close navigation"><X /></button></div>
       <nav>{links.map(([label, href], i) => <a href={href} onClick={close} key={label}><span>0{i + 1}</span>{label}<ArrowUpRight /></a>)}</nav>
-      <div className={s.menuBottom}><Link href="/">Current portfolio <ArrowUpRight size={16} /></Link><span>Backend systems. Human explanations.</span></div>
+      <div className={s.menuBottom}><Link href="/alternate">Alternate portfolio <ArrowUpRight size={16} /></Link><span>Backend systems. Human explanations.</span></div>
     </dialog>
   </>;
 }
@@ -66,7 +66,7 @@ function Hero() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const y = useTransform(scrollYProgress, [0, 1], [0, 130]);
   return <section ref={ref} id="studio-top" className={s.hero}>
-    <div className={s.heroOverline}><span><span className={s.statusDot} /> Developer relations × backend systems</span><span>A portfolio in motion / 2026</span></div>
+    <div className={s.heroOverline}><span><span className={s.statusDot} /> Developer relations × backend systems</span></div>
     <div className={s.heroStage}>
       <motion.div className={s.heroStatement} initial={{ opacity: 0, transform: 'translateY(24px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} transition={{ duration: .9, ease }}><h1>Building things.<br/>Making sense<br/>of them.</h1><a className={s.textLink} href="#studio-work">Explore the work <ArrowDown size={18}/></a></motion.div>
       <motion.div className={s.sculptureWrap} style={reduced ? undefined : { y }}><SignalSculpture /></motion.div>
@@ -109,7 +109,7 @@ function Project({ index }: { index: number }) {
   return <motion.article initial={reduced ? false : { opacity: 1, transform: 'translateY(55px)' }} whileInView={{ opacity: 1, transform: 'translateY(0px)' }} viewport={{ once: false, amount: .15 }} transition={{ duration: .85, ease }} ref={ref} className={s.project} id={`studio-project-${index}`}><div className={s.projectCopy}><span className={s.projectCategory}>{index === 0 ? 'MeetStream / multilingual accessibility' : index === 1 ? 'MeetStream / agent infrastructure' : p.category.toLowerCase()}</span><h3>{p.title}</h3><p>{p.text}</p><span className={s.projectStack}>{p.stack}</span><a className={s.projectLink} href={p.href} target="_blank" rel="noreferrer">{p.linkLabel || 'View source'}<ArrowUpRight size={20}/></a><span className={s.projectSignal}>{p.signal}</span></div><div className={s.projectVisual} data-study={index}><span className={s.visualIndex}>0{index+1} / 05</span><motion.div className={s.studyMotion} style={reduced ? undefined : { y, rotate }}><ProjectStudy index={index}/></motion.div></div></motion.article>;
 }
 
-function OffDuty() {
+function OutsideTheBuild() {
   return <section id="studio-outside" className={s.outside}>
     <div className={s.sectionMarker}><span className={s.marker}/><span>Outside the build</span></div>
     <div className={s.outsideTitle}><h2>Always another<br/>rabbit hole.</h2><p>Movies, music, puzzles, and the urge to figure out how the magic trick works.</p></div>
@@ -134,40 +134,6 @@ function Writing() {
   </section>;
 }
 
-const typefaces = [
-  { id: 'dm', label: 'DM Sans', note: 'Clear & composed' },
-  { id: 'space', label: 'Space Grotesk', note: 'Technical & expressive' },
-  { id: 'outfit', label: 'Outfit', note: 'Soft & geometric' },
-];
-
-function subscribeToQuery(callback: () => void) {
-  window.addEventListener('popstate', callback);
-  window.addEventListener('studio-font-change', callback);
-  return () => {
-    window.removeEventListener('popstate', callback);
-    window.removeEventListener('studio-font-change', callback);
-  };
-}
-const readQuery = () => window.location.search;
-const serverQuery = () => '';
-
-export default function Studio({ fontClass }: { fontClass: string }) {
-  const query = useSyncExternalStore(subscribeToQuery, readQuery, serverQuery);
-  const params = new URLSearchParams(query);
-  const selected = params.get('type');
-  const typeface = typefaces.some(font => font.id === selected) ? selected! : 'dm';
-  const fontReview = params.get('fonts') === '1';
-  const chooseTypeface = (id: string) => {
-    const url = new URL(window.location.href);
-    url.searchParams.set('type', id);
-    window.history.replaceState(null, '', url);
-    window.dispatchEvent(new Event('studio-font-change'));
-  };
-  const closeReview = () => {
-    const url = new URL(window.location.href);
-    url.searchParams.delete('fonts');
-    window.history.replaceState(null, '', url);
-    window.dispatchEvent(new Event('studio-font-change'));
-  };
-  return <MotionConfig reducedMotion="user"><div className={`${s.page} ${fontClass}`} data-typeface={typeface}><a href="#studio-main" className={s.skip}>Skip to content</a><Navigation/><main id="studio-main"><Hero/><Manifesto/><section id="studio-work" className={s.work}><div className={s.workHeading}><div className={s.sectionMarker}><span className={s.marker}/><span>Selected work / five projects</span></div><h2>Built to be<br/><span>used.</span><ArrowDown aria-hidden="true"/></h2><p>Backend work, AI workflows, and the developer experience around them.</p></div>{projects.map((p, index) => <Project key={p.title} index={index}/>)}</section><section id="studio-about" className={s.about}><div className={s.sectionMarker}><span className={s.marker}/><span>The person behind the work</span></div><Entrance><h2>Make unfamiliar<br/>work easier<br/>to start.</h2></Entrance><div className={s.aboutBody}><p>I&apos;m Arjun, a Computer Science student and Developer Relations &amp; Go-to-Market intern at <a href="https://meetstream.ai" target="_blank" rel="noreferrer">MeetStream</a>.</p><p>I work across backend engineering, developer experience, technical content, and go-to-market. I&apos;m interested in the practical details that help developers move from an API reference to something running.</p><div className={s.principles}>{['Start with something runnable.', 'Make the next step clear.', 'Let good defaults do some work.'].map(v => <div key={v}><ArrowUpRight size={18}/>{v}</div>)}</div></div></section><OffDuty/><Writing/></main><footer className={s.footer}><div className={s.footerTop}><span>Have something interesting in mind?</span><a href="#studio-top">Back to top <ArrowUp size={16}/></a></div><a className={s.footerHeadline} href="https://www.linkedin.com/in/arjun-manivannan/" target="_blank" rel="noreferrer"><span>Let&apos;s talk.</span><ArrowUpRight/></a><div className={s.footerBottom}><span>Arjun M / Building & explaining</span><div>{social.map(([name, href]) => <a href={href} key={name} target="_blank" rel="noreferrer">{name}<ArrowUpRight size={14}/></a>)}</div><Link href="/">Current portfolio <ArrowUpRight size={14}/></Link><span>© 2026</span></div></footer>{fontReview && <aside className={s.fontReview} aria-label="Compare typefaces"><div className={s.fontReviewLabel}>Typeface study<span>Try these across the page</span></div><div className={s.fontChoices}>{typefaces.map(font => <button key={font.id} data-font={font.id} aria-pressed={typeface === font.id} onClick={() => chooseTypeface(font.id)}><strong>{font.label}</strong><span>{font.note}</span></button>)}</div><button className={s.round} onClick={closeReview} aria-label="Close font comparison"><X size={17}/></button></aside>}</div></MotionConfig>;
+export default function Studio() {
+  return <MotionConfig reducedMotion="user"><div className={s.page}><a href="#studio-main" className={s.skip}>Skip to content</a><Navigation/><main id="studio-main"><Hero/><Manifesto/><section id="studio-work" className={s.work}><div className={s.workHeading}><div className={s.sectionMarker}><span className={s.marker}/><span>Selected work / five projects</span></div><h2>Built to be<br/><span>used.</span><ArrowDown aria-hidden="true"/></h2><p>Backend work, AI workflows, and the developer experience around them.</p></div>{projects.map((p, index) => <Project key={p.title} index={index}/>)}</section><section id="studio-about" className={s.about}><div className={s.sectionMarker}><span className={s.marker}/><span>The person behind the work</span></div><Entrance><h2>Make unfamiliar<br/>work easier<br/>to start.</h2></Entrance><div className={s.aboutBody}><p>I&apos;m Arjun, a Computer Science student and Developer Relations &amp; Go-to-Market intern at <a href="https://meetstream.ai" target="_blank" rel="noreferrer">MeetStream</a>.</p><p>I work across backend engineering, developer experience, technical content, and go-to-market. I&apos;m interested in the practical details that help developers move from an API reference to something running.</p><div className={s.principles}>{['Start with something runnable.', 'Make the next step clear.', 'Let good defaults do some work.'].map(v => <div key={v}><ArrowUpRight size={18}/>{v}</div>)}</div></div></section><OutsideTheBuild/><Writing/></main><footer className={s.footer}><div className={s.footerTop}><span>Have something interesting in mind?</span><a href="#studio-top">Back to top <ArrowUp size={16}/></a></div><a className={s.footerHeadline} href="https://www.linkedin.com/in/arjun-manivannan/" target="_blank" rel="noreferrer"><span>Let&apos;s talk.</span><ArrowUpRight/></a><div className={s.footerBottom}><span>Arjun M / Building & explaining</span><div>{social.map(([name, href]) => <a href={href} key={name} target="_blank" rel="noreferrer">{name}<ArrowUpRight size={14}/></a>)}</div><Link href="/alternate">Alternate portfolio <ArrowUpRight size={14}/></Link><span>© 2026</span></div></footer></div></MotionConfig>;
 }
