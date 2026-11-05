@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
-import { Manrope } from 'next/font/google';
+import { DM_Sans, Outfit, Space_Grotesk } from 'next/font/google';
 import Studio from './studio';
 
-const manrope = Manrope({ subsets: ['latin'], variable: '--studio-font', display: 'swap' });
+const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-dm', display: 'swap' });
+const space = Space_Grotesk({ subsets: ['latin'], variable: '--font-space', display: 'swap', preload: false });
+const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit', display: 'swap', preload: false });
 
 export const metadata: Metadata = {
   title: 'Arjun M | Systems in motion',
@@ -11,5 +13,5 @@ export const metadata: Metadata = {
 };
 
 export default function AlternatePage() {
-  return <Studio fontClass={manrope.variable} />;
+  return <Studio fontClass={`${dmSans.variable} ${space.variable} ${outfit.variable}`} />;
 }

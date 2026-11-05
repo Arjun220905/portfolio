@@ -1,10 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from 'react';
 import { motion, MotionConfig, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from 'motion/react';
-import { ArrowDown, ArrowUpRight, ArrowUp, Plus, X, Sun, Moon, Play, Pause, RotateCcw, Braces, AudioLines, GitBranch, MessageSquare, Radio, Check } from 'lucide-react';
-import { projects, articles, interests } from './content';
+import { ArrowDown, ArrowUpRight, ArrowUp, Plus, X, Sun, Moon, RotateCcw, Braces, AudioLines, GitBranch, MessageSquare, Radio, Check } from 'lucide-react';
+import { projects, interests } from './content';
+import { CinemaFrame, CompactDisc, KnightPuzzle } from './studio-interests';
+import { studioArticles } from './studio-writing';
 import s from './studio.module.css';
 
 const ease = [.22, 1, .36, 1] as const;
@@ -54,7 +56,7 @@ function SignalSculpture() {
         <circle cx="300" cy="300" r="257" fill="none" stroke="currentColor" strokeWidth=".7" strokeDasharray="2 9" opacity=".3"/>
         <path d="M300 29v22M300 549v22M29 300h22M549 300h22" stroke="currentColor" opacity=".4" />
       </motion.svg>
-    </motion.div><span className={s.sculptureHint}><span /> Touch to turn. Curiosity encouraged.</span>
+    </motion.div>
   </button>;
 }
 
@@ -66,11 +68,10 @@ function Hero() {
   return <section ref={ref} id="studio-top" className={s.hero}>
     <div className={s.heroOverline}><span><span className={s.statusDot} /> Developer relations × backend systems</span><span>A portfolio in motion / 2026</span></div>
     <div className={s.heroStage}>
-      <motion.div className={s.heroStatement} initial={{ opacity: 0, transform: 'translateY(24px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} transition={{ duration: .9, ease }}><p>Building things.<br/>Making sense<br/>of them.</p><a className={s.textLink} href="#studio-work">Explore the work <ArrowDown size={18}/></a></motion.div>
+      <motion.div className={s.heroStatement} initial={{ opacity: 0, transform: 'translateY(24px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} transition={{ duration: .9, ease }}><h1>Building things.<br/>Making sense<br/>of them.</h1><a className={s.textLink} href="#studio-work">Explore the work <ArrowDown size={18}/></a></motion.div>
       <motion.div className={s.sculptureWrap} style={reduced ? undefined : { y }}><SignalSculpture /></motion.div>
       <div className={s.heroAside}><span className={s.smallLabel}>A little context</span><p>I build backend tools and explain how to use them, so a good idea can become a working integration.</p><a href="https://www.linkedin.com/in/arjun-manivannan/" target="_blank" rel="noreferrer" className={s.circleLink} aria-label="Connect with Arjun on LinkedIn"><ArrowUpRight /></a></div>
     </div>
-    <h1 className={s.name} aria-label="Arjun M">{'Arjun M'.split('').map((letter, i) => <motion.span key={i} aria-hidden="true" initial={{ transform: 'translateY(105%) rotate(5deg)' }} animate={{ transform: 'translateY(0%) rotate(0deg)' }} transition={{ duration: 1.1, delay: .08 * i, ease }}>{letter === ' ' ? '\u00a0' : letter}</motion.span>)}</h1>
     <div className={s.heroBottom}><span>Systems that work. Stories that make sense.</span><a href="#studio-work">Scroll to explore <ArrowDown size={14} /></a></div>
   </section>;
 }
@@ -105,30 +106,68 @@ function Project({ index }: { index: number }) {
   const y = useTransform(scrollYProgress, [0, 1], [45, -45]);
   const rotate = useTransform(scrollYProgress, [0, .5, 1], [2, 0, -2]);
   const p = projects[index];
-  return <motion.article initial={reduced ? false : { opacity: 1, transform: 'translateY(55px)' }} whileInView={{ opacity: 1, transform: 'translateY(0px)' }} viewport={{ once: false, amount: .15 }} transition={{ duration: .85, ease }} ref={ref} className={s.project} id={`studio-project-${index}`}><div className={s.projectCopy}><span className={s.projectCategory}>{p.category.toLowerCase()}</span><h3>{p.title}</h3><p>{p.text}</p><span className={s.projectStack}>{p.stack}</span><a className={s.projectLink} href={p.href} target="_blank" rel="noreferrer">{p.linkLabel || 'View source'}<ArrowUpRight size={20}/></a><span className={s.projectSignal}>{p.signal}</span></div><div className={s.projectVisual} data-study={index}><span className={s.visualIndex}>0{index+1} / 05</span><motion.div className={s.studyMotion} style={reduced ? undefined : { y, rotate }}><ProjectStudy index={index}/></motion.div></div></motion.article>;
-}
-
-function Puzzle() {
-  const [tiles, setTiles] = useState([1, 0, 3, 2]);
-  const solved = tiles.join('') === '1230';
-  const move = (i: number) => { const empty = tiles.indexOf(0); if (Math.abs(Math.floor(i/2) - Math.floor(empty/2)) + Math.abs(i%2 - empty%2) !== 1) return; setTiles(v => { const n = [...v]; [n[i], n[empty]] = [n[empty], n[i]]; return n; }); };
-  return <div className={s.puzzleObject}><div className={s.tiles}>{tiles.map((v, i) => v ? <motion.button layout key={v} onClick={() => move(i)} aria-label={`Move tile ${v}`} transition={{ type: 'spring', stiffness: 250, damping: 25 }}>{v === 1 ? <Plus/> : v === 2 ? <div className={s.tileCircle}/> : <div className={s.tileStripes}/>}</motion.button> : <span key="empty" />)}</div><button className={s.objectControl} onClick={() => setTiles([1, 0, 3, 2])}><RotateCcw size={14}/>{solved ? 'Solved. Again?' : 'Slide the tiles into order'}<span className={s.srOnly}>: plus, circle, stripes, empty.</span></button></div>;
+  return <motion.article initial={reduced ? false : { opacity: 1, transform: 'translateY(55px)' }} whileInView={{ opacity: 1, transform: 'translateY(0px)' }} viewport={{ once: false, amount: .15 }} transition={{ duration: .85, ease }} ref={ref} className={s.project} id={`studio-project-${index}`}><div className={s.projectCopy}><span className={s.projectCategory}>{index === 0 ? 'MeetStream / multilingual accessibility' : index === 1 ? 'MeetStream / agent infrastructure' : p.category.toLowerCase()}</span><h3>{p.title}</h3><p>{p.text}</p><span className={s.projectStack}>{p.stack}</span><a className={s.projectLink} href={p.href} target="_blank" rel="noreferrer">{p.linkLabel || 'View source'}<ArrowUpRight size={20}/></a><span className={s.projectSignal}>{p.signal}</span></div><div className={s.projectVisual} data-study={index}><span className={s.visualIndex}>0{index+1} / 05</span><motion.div className={s.studyMotion} style={reduced ? undefined : { y, rotate }}><ProjectStudy index={index}/></motion.div></div></motion.article>;
 }
 
 function OffDuty() {
-  const [playing, setPlaying] = useState(false);
-  const [wide, setWide] = useState(false);
-  return <section id="studio-outside" className={s.outside}><div className={s.sectionMarker}><span className={s.marker}/><span>Outside the build</span></div><div className={s.outsideTitle}><h2>Always another<br/>rabbit hole.</h2><p>Movies, music, puzzles, and the urge to figure out how the magic trick works.</p></div><div className={s.objects}>
-    {interests.map((item, i) => <article key={item.title} className={s.object}><div className={s.objectStage}>
-      {i === 0 ? <div className={s.filmObject}><button className={s.filmFrame} data-wide={wide} aria-label="Change the cinematic frame" aria-pressed={wide} onClick={() => setWide(v => !v)}><span className={s.filmSun}/><span className={s.filmMountain}/><span className={s.filmMountainTwo}/><span className={s.filmPerson}/><span className={s.filmFormat}>{wide ? '2.39 : 1' : '1.85 : 1'}</span></button><span className={s.objectControl}>Tap to change the frame</span></div> : i === 1 ? <div className={s.recordObject}><div className={s.record} data-playing={playing}><div><span>Sound<br/>opinions.</span><i/></div></div><button className={s.objectControl} aria-pressed={playing} onClick={() => setPlaying(v => !v)}>{playing ? <Pause size={14}/> : <Play size={14}/>} {playing ? 'Pause the record' : 'Give it a spin'}<span className={s.srOnly}>. Visual only, no audio.</span></button></div> : <Puzzle/>}
-      </div><div className={s.objectCopy}><span>{item.category.toLowerCase()}</span><h3>{item.title}</h3><p>{item.text}</p></div></article>)}
-    </div></section>;
+  return <section id="studio-outside" className={s.outside}>
+    <div className={s.sectionMarker}><span className={s.marker}/><span>Outside the build</span></div>
+    <div className={s.outsideTitle}><h2>Always another<br/>rabbit hole.</h2><p>Movies, music, puzzles, and the urge to figure out how the magic trick works.</p></div>
+    <div className={s.objects}>{interests.map((item, i) => <article key={item.title} className={s.object}>
+      <div className={s.objectStage}>{i === 0 ? <CinemaFrame/> : i === 1 ? <CompactDisc/> : <KnightPuzzle/>}</div>
+      <div className={s.objectCopy}><span>{item.category.toLowerCase()}</span><h3>{item.title}</h3><p>{item.text}</p></div>
+    </article>)}</div>
+  </section>;
 }
 
 function Writing() {
-  return <section id="studio-writing" className={s.writing}><div className={s.writingIntro}><div className={s.sectionMarker}><span className={s.marker}/><span>Field notes</span></div><h2>Give the work<br/>some context.</h2><p>Writing demos, guides, and notes that make an integration easier to understand and use.</p><a className={s.textLink} href="https://meetstream.ai/blog/author/arjun/" target="_blank" rel="noreferrer">All writing <ArrowUpRight size={18}/></a></div><div className={s.writingList}>{articles.map(([title, slug], i) => <a href={`https://meetstream.ai/blog/${slug}`} target="_blank" rel="noreferrer" key={slug}><span className={s.articleNumber}>0{i+1}</span><div><small>MeetStream / developer guide</small><h3>{title}</h3></div><ArrowUpRight/></a>)}</div></section>;
+  return <section id="studio-writing" className={s.writing}>
+    <div className={s.writingIntro}>
+      <div className={s.sectionMarker}><span className={s.marker}/><span>Field notes</span></div>
+      <h2>Give the work<br/>some context.</h2>
+      <p>Writing demos, guides, and notes that make an integration easier to understand and use.</p>
+      <a className={s.textLink} href="https://meetstream.ai/blog/author/arjun/" target="_blank" rel="noreferrer">All writing <ArrowUpRight size={18}/></a>
+    </div>
+    <div className={s.writingList}>{studioArticles.map(({ title, slug, topic, date }, i) => <a href={`https://meetstream.ai/blog/${slug}`} target="_blank" rel="noreferrer" key={slug}>
+      <span className={s.articleNumber}>0{i+1}</span><div><small>{topic}{date && ` / ${date}`}</small><h3>{title}</h3></div><ArrowUpRight/>
+    </a>)}</div>
+  </section>;
 }
 
+const typefaces = [
+  { id: 'dm', label: 'DM Sans', note: 'Clear & composed' },
+  { id: 'space', label: 'Space Grotesk', note: 'Technical & expressive' },
+  { id: 'outfit', label: 'Outfit', note: 'Soft & geometric' },
+];
+
+function subscribeToQuery(callback: () => void) {
+  window.addEventListener('popstate', callback);
+  window.addEventListener('studio-font-change', callback);
+  return () => {
+    window.removeEventListener('popstate', callback);
+    window.removeEventListener('studio-font-change', callback);
+  };
+}
+const readQuery = () => window.location.search;
+const serverQuery = () => '';
+
 export default function Studio({ fontClass }: { fontClass: string }) {
-  return <MotionConfig reducedMotion="user"><div className={`${s.page} ${fontClass}`}><a href="#studio-main" className={s.skip}>Skip to content</a><Navigation/><main id="studio-main"><Hero/><Manifesto/><section id="studio-work" className={s.work}><div className={s.workHeading}><div className={s.sectionMarker}><span className={s.marker}/><span>Selected work / five projects</span></div><h2>Built to be<br/><span>used.</span><ArrowDown aria-hidden="true"/></h2><p>Backend work, AI workflows, and the developer experience around them.</p></div>{projects.map((p, index) => <Project key={p.title} index={index}/>)}</section><section id="studio-about" className={s.about}><div className={s.sectionMarker}><span className={s.marker}/><span>The person behind the work</span></div><Entrance><h2>Make unfamiliar<br/>work easier<br/>to start.</h2></Entrance><div className={s.aboutBody}><p>I&apos;m Arjun, a Computer Science student and Developer Relations &amp; Go-to-Market intern at <a href="https://meetstream.ai" target="_blank" rel="noreferrer">MeetStream</a>.</p><p>I work across backend engineering, developer experience, technical content, and go-to-market. I&apos;m interested in the practical details that help developers move from an API reference to something running.</p><div className={s.principles}>{['Start with something runnable.', 'Make the next step clear.', 'Let good defaults do some work.'].map(v => <div key={v}><ArrowUpRight size={18}/>{v}</div>)}</div></div></section><OffDuty/><Writing/></main><footer className={s.footer}><div className={s.footerTop}><span>Have something interesting in mind?</span><a href="#studio-top">Back to top <ArrowUp size={16}/></a></div><a className={s.footerHeadline} href="https://www.linkedin.com/in/arjun-manivannan/" target="_blank" rel="noreferrer"><span>Let&apos;s talk.</span><ArrowUpRight/></a><div className={s.footerBottom}><span>Arjun M / Building & explaining</span><div>{social.map(([name, href]) => <a href={href} key={name} target="_blank" rel="noreferrer">{name}<ArrowUpRight size={14}/></a>)}</div><Link href="/">Current portfolio <ArrowUpRight size={14}/></Link><span>© 2026</span></div></footer></div></MotionConfig>;
+  const query = useSyncExternalStore(subscribeToQuery, readQuery, serverQuery);
+  const params = new URLSearchParams(query);
+  const selected = params.get('type');
+  const typeface = typefaces.some(font => font.id === selected) ? selected! : 'dm';
+  const fontReview = params.get('fonts') === '1';
+  const chooseTypeface = (id: string) => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('type', id);
+    window.history.replaceState(null, '', url);
+    window.dispatchEvent(new Event('studio-font-change'));
+  };
+  const closeReview = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('fonts');
+    window.history.replaceState(null, '', url);
+    window.dispatchEvent(new Event('studio-font-change'));
+  };
+  return <MotionConfig reducedMotion="user"><div className={`${s.page} ${fontClass}`} data-typeface={typeface}><a href="#studio-main" className={s.skip}>Skip to content</a><Navigation/><main id="studio-main"><Hero/><Manifesto/><section id="studio-work" className={s.work}><div className={s.workHeading}><div className={s.sectionMarker}><span className={s.marker}/><span>Selected work / five projects</span></div><h2>Built to be<br/><span>used.</span><ArrowDown aria-hidden="true"/></h2><p>Backend work, AI workflows, and the developer experience around them.</p></div>{projects.map((p, index) => <Project key={p.title} index={index}/>)}</section><section id="studio-about" className={s.about}><div className={s.sectionMarker}><span className={s.marker}/><span>The person behind the work</span></div><Entrance><h2>Make unfamiliar<br/>work easier<br/>to start.</h2></Entrance><div className={s.aboutBody}><p>I&apos;m Arjun, a Computer Science student and Developer Relations &amp; Go-to-Market intern at <a href="https://meetstream.ai" target="_blank" rel="noreferrer">MeetStream</a>.</p><p>I work across backend engineering, developer experience, technical content, and go-to-market. I&apos;m interested in the practical details that help developers move from an API reference to something running.</p><div className={s.principles}>{['Start with something runnable.', 'Make the next step clear.', 'Let good defaults do some work.'].map(v => <div key={v}><ArrowUpRight size={18}/>{v}</div>)}</div></div></section><OffDuty/><Writing/></main><footer className={s.footer}><div className={s.footerTop}><span>Have something interesting in mind?</span><a href="#studio-top">Back to top <ArrowUp size={16}/></a></div><a className={s.footerHeadline} href="https://www.linkedin.com/in/arjun-manivannan/" target="_blank" rel="noreferrer"><span>Let&apos;s talk.</span><ArrowUpRight/></a><div className={s.footerBottom}><span>Arjun M / Building & explaining</span><div>{social.map(([name, href]) => <a href={href} key={name} target="_blank" rel="noreferrer">{name}<ArrowUpRight size={14}/></a>)}</div><Link href="/">Current portfolio <ArrowUpRight size={14}/></Link><span>© 2026</span></div></footer>{fontReview && <aside className={s.fontReview} aria-label="Compare typefaces"><div className={s.fontReviewLabel}>Typeface study<span>Try these across the page</span></div><div className={s.fontChoices}>{typefaces.map(font => <button key={font.id} data-font={font.id} aria-pressed={typeface === font.id} onClick={() => chooseTypeface(font.id)}><strong>{font.label}</strong><span>{font.note}</span></button>)}</div><button className={s.round} onClick={closeReview} aria-label="Close font comparison"><X size={17}/></button></aside>}</div></MotionConfig>;
 }

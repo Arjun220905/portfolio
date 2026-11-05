@@ -1,0 +1,83 @@
+'use client';
+
+import { useState, type CSSProperties } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
+import { Pause, Play, RotateCcw, Star } from 'lucide-react';
+import s from './studio.module.css';
+
+const formats = [
+  { label: 'Scope', ratio: 2.39, text: '2.39:1' },
+  { label: 'IMAX', ratio: 1.9, text: '1.90:1' },
+  { label: 'IMAX', ratio: 1.43, text: '1.43:1' },
+];
+
+export function CinemaFrame() {
+  const [format, setFormat] = useState(0);
+  const current = formats[format];
+  const crop = (1 - 1.43 / current.ratio) * 50;
+  return <div className={s.filmObject}>
+    <button className={s.filmFrame} onClick={() => setFormat(v => (v + 1) % formats.length)} aria-label={`Cinema frame: ${current.label} ${current.text}. Show next format.`}>
+      <span className={s.filmScene} style={{ '--crop': `${crop}%` } as CSSProperties}>
+        <span className={s.filmSun}/><span className={s.filmMountain}/><span className={s.filmMountainTwo}/><span className={s.filmPerson}/>
+      </span>
+    </button>
+    <fieldset className={s.formatChoices}><legend className={s.srOnly}>Cinema aspect ratio</legend>
+      {formats.map((f, i) => <button key={f.text} aria-pressed={format === i} onClick={() => setFormat(i)}><span>{f.label}</span>{f.text}</button>)}
+    </fieldset>
+    <span className={s.objectHint}>Same scene. More of the picture.</span>
+  </div>;
+}
+
+export function CompactDisc() {
+  const [playing, setPlaying] = useState(false);
+  const reduced = useReducedMotion();
+  return <div className={s.cdObject}>
+    <div className={s.jewelCase}>
+      <div className={s.caseSpine}/>
+      <div className={s.compactDisc} data-playing={playing} aria-hidden="true"><div className={s.discHub}/></div>
+      <span className={s.redTape} aria-hidden="true"/>
+    </div>
+    <button className={s.objectControl} aria-pressed={playing} onClick={() => setPlaying(v => !v)}>
+      {playing ? <Pause size={14}/> : <Play size={14}/>} {playing ? 'Pause the disc' : 'Give it a spin'}
+    </button>
+    <span className={s.objectHint}>{reduced ? 'Yeezus, reimagined · still in reduced motion' : 'Yeezus, reimagined · visual only'}</span>
+  </div>;
+}
+
+const start = 57; // b1
+const target = 30; // g5
+const squareName = (square: number) => `${'abcdefgh'[square % 8]}${8 - Math.floor(square / 8)}`;
+const isKnightMove = (from: number, to: number) => {
+  const dx = Math.abs(from % 8 - to % 8);
+  const dy = Math.abs(Math.floor(from / 8) - Math.floor(to / 8));
+  return dx * dy === 2;
+};
+
+function Knight() {
+  return <svg viewBox="0 0 45 45" aria-hidden="true"><path d="M10 36h25v4H9zm3-3c1-8 7-10 13-13l-3-4-8 7-7-3 3-9 8-3 1-6 5 4 5-2c1 6 5 8 5 16v13H13Z" fill="currentColor" stroke="var(--knight-outline)" strokeWidth="1.4" strokeLinejoin="round"/><circle cx="20" cy="12" r="1.5" fill="var(--knight-outline)"/></svg>;
+}
+
+export function KnightPuzzle() {
+  const [position, setPosition] = useState(start);
+  const [moves, setMoves] = useState(0);
+  const reduced = useReducedMotion();
+  const reached = position === target;
+  const solved = reached && moves === 3;
+  const status = solved ? 'Three moves. Nicely played.' : reached ? `Reached g5 in ${moves}. Can you do it in three?` : `Reach g5 in three knight moves. Moves: ${moves}.`;
+  return <div className={s.chessObject}>
+    <fieldset className={s.chessBoard}><legend className={s.srOnly}>Knight puzzle. Move from b1 to g5 in three moves.</legend>
+      {Array.from({ length: 64 }, (_, i) => {
+        const available = !reached && isKnightMove(position, i);
+        return <button key={i} className={s.chessSquare} data-dark={(Math.floor(i / 8) + i % 8) % 2 === 1} data-target={i === target} data-available={available} disabled={!available} aria-label={`${squareName(i)}${i === position ? ', white knight' : i === target ? ', target' : ''}${available ? ', move knight here' : ''}`} onClick={() => { setPosition(i); setMoves(v => v + 1); }}>
+          {i === target && <Star className={s.chessTarget} size={16} aria-hidden="true"/>}
+          {available && i !== target && <span className={s.legalMove}/>}
+          {i % 8 === 0 && <small className={s.rankLabel}>{8 - Math.floor(i / 8)}</small>}
+          {i >= 56 && <small className={s.fileLabel}>{'abcdefgh'[i % 8]}</small>}
+        </button>;
+      })}
+      <motion.div className={s.knight} initial={false} animate={{ x: `${position % 8 * 100}%`, y: `${Math.floor(position / 8) * 100}%` }} transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 190, damping: 24 }}><Knight/></motion.div>
+    </fieldset>
+    <output className={s.chessStatus}>{status}</output>
+    <button className={s.objectControl} onClick={() => { setPosition(start); setMoves(0); }}><RotateCcw size={13}/>{solved ? 'One more round?' : 'Reset the board'}</button>
+  </div>;
+}
