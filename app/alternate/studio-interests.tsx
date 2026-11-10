@@ -1,9 +1,10 @@
 'use client';
 
-import { useReducer, useState, type CSSProperties } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
-import { Pause, RotateCw, RotateCcw, Star } from 'lucide-react';
+import { useReducer, useRef, useState, type CSSProperties } from 'react';
+import { motion, useInView, useReducedMotion } from 'motion/react';
+import { Pause, Play, RotateCcw, Star } from 'lucide-react';
 import { initialPuzzle, isKnightMove, puzzleReducer, squareName, targetSquare } from './knight-puzzle';
+import { usePrefersReducedMotion } from './use-reduced-motion';
 import s from './studio.module.css';
 
 const formats = [
@@ -29,19 +30,27 @@ export function CinemaFrame() {
 }
 
 export function CompactDisc() {
-  const [playing, setPlaying] = useState(false);
-  return <div className={s.cdObject}>
-    <div className={s.jewelCase}>
-      <div className={s.caseSpine}/>
-      <div className={s.discTray}/>
-      <div className={s.compactDisc} data-playing={playing} aria-hidden="true"><div className={s.discTracks}/><div className={s.discHub}/></div>
+  const ref = useRef<HTMLButtonElement>(null);
+  const reduced = usePrefersReducedMotion();
+  const inView = useInView(ref, { amount: .1 });
+  const [playOverride, setPlayOverride] = useState<boolean | null>(null);
+  const playing = playOverride ?? !reduced;
+  return <button ref={ref} type="button" className={`${s.cdObject} ${s.discControl}`}
+    aria-label={playing ? 'Pause the disc' : 'Play the disc'}
+    data-explicit-play={playOverride === true}
+    data-in-view={inView}
+    onClick={() => setPlayOverride(!playing)}>
+    <span className={s.jewelCase}>
+      <span className={s.caseSpine}/>
+      <span className={s.discTray}/>
+      <span className={s.compactDisc} data-playing={playing && inView} aria-hidden="true"><span className={s.discTracks}/><span className={s.discHub}/></span>
       <span className={s.caseHinge}/><span className={s.caseHinge}/>
       <span className={s.redTape} aria-hidden="true"/>
-    </div>
-    <button className={s.objectControl} aria-pressed={playing} onClick={() => setPlaying(v => !v)}>
-      {playing ? <Pause size={14}/> : <RotateCw size={14}/>} {playing ? 'Pause the disc' : 'Spin the disc'}
-    </button>
-  </div>;
+    </span>
+    <span className={s.objectControl} aria-hidden="true">
+      {playing ? <Pause size={14}/> : <Play size={14}/>} {playing ? 'Pause the disc' : 'Play the disc'}
+    </span>
+  </button>;
 }
 
 function Knight() {
