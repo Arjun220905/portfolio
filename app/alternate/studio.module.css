@@ -173,15 +173,6 @@
 .walletDecision > svg { flex-shrink:0; color:var(--blue); }
 .walletDecision small { font-size:10px; color:var(--muted); }
 .walletDecision p { font-size:19px; letter-spacing:-.035em; line-height:1.25; margin-top:7px; }
-.recentBuilds { padding-top:45px; border-top:1px solid var(--line); }
-.recentBuilds > h3 { font-size:24px; font-weight:500; letter-spacing:-.035em; margin-bottom:25px; }
-.recentBuilds > div { display:grid; grid-template-columns:1fr 1fr; gap:4%; }
-.recentBuilds a { display:flex; justify-content:space-between; gap:20px; padding:25px 0; border-top:1px solid var(--line); }
-.recentBuilds h4 { font-size:21px; font-weight:500; letter-spacing:-.03em; margin:0 0 12px; }
-.recentBuilds p { font-size:13px; line-height:1.75; color:var(--muted); max-width:420px; }
-.recentBuilds small { display:block; color:var(--muted); font-size:10px; margin-top:18px; }
-.recentBuilds a > svg { flex-shrink:0; color:var(--blue); transition:transform .3s; }
-.recentBuilds a:hover > svg { transform:translate(4px,-4px); }
 .about { background:var(--soft); padding:100px 8%; display:grid; grid-template-columns:1fr 1fr; gap:55px 10%; }
 .about .sectionMarker { grid-column:1/-1; }
 .about h2 { font-size:clamp(42px,5.6vw,80px); line-height:1.08; letter-spacing:-.06em; font-weight:500; }
@@ -364,7 +355,6 @@
   .chainBlocks > span:not(:last-child)::after { width:21px; }
   .walletDecision { padding:17px 12px; gap:10px; }
   .walletDecision p { font-size:18px; }
-  .recentBuilds > div { grid-template-columns:1fr; gap:0; }
   .platforms { gap:13px; font-size:9px; }
   .about { display:block; padding:65px 6%; }
   .about h2 { font-size:48px; margin:30px 0; }

@@ -9,6 +9,7 @@ const existing = previousProjects.map((project, study) => ({
 }));
 
 export const studioProjects = [
+  ...existing.slice(0, 2),
   {
     title: 'Trace',
     category: 'Personal build / agent workflows',
@@ -19,7 +20,6 @@ export const studioProjects = [
     linkLabel: 'Explore project',
     study: 5,
   },
-  ...existing.slice(0, 2),
   {
     title: 'Dynamic Wallet Trust Scoring',
     category: 'College project / blockchain & machine learning',
@@ -30,20 +30,5 @@ export const studioProjects = [
     linkLabel: 'Explore project',
     study: 6,
   },
-  ...existing.slice(2),
-];
-
-export const recentBridges = [
-  {
-    title: 'DeepSeek Meeting Bridge',
-    text: 'Brings repository-aware reasoning into meeting voice and chat, with explicit operator approval before engineering tasks run.',
-    stack: 'Node.js · SQLite · DeepSeek Harness',
-    href: 'https://github.com/Arjun220905/meetstream-deepseek-bridge',
-  },
-  {
-    title: 'Pipecat Meeting Bridge',
-    text: 'Connects a Pipecat voice pipeline to Meet, Zoom, and Teams, with speech recognition, Gemini responses, and interruption recovery.',
-    stack: 'Python · Pipecat · Deepgram · Gemini',
-    href: 'https://github.com/Arjun220905/meetstream-pipecat-bridge',
-  },
+  existing[4],
 ];
