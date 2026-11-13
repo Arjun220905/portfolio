@@ -47,7 +47,7 @@
 .menuTop,.menuBottom { display:flex; justify-content:space-between; align-items:center; font-size:13px; }
 .menu nav { margin:auto 0; }
 .menu nav a { display:flex; align-items:center; gap:25px; font-size:clamp(48px,8vw,110px); letter-spacing:-.065em; line-height:1.3; border-bottom:1px solid var(--line); transition:padding-left .4s,color .4s; }
-.menu nav a:hover { padding-left:24px; color:var(--blue); }
+@media(hover:hover) and (pointer:fine) { .menu nav a:hover { padding-left:24px; color:var(--blue); } }
 .menu nav a span { font-size:12px; letter-spacing:0; margin-right:20px; }
 .menu nav a svg { margin-left:auto; width:.6em; height:.6em; }
 .menuBottom a { display:flex; align-items:center; gap:12px; }
@@ -260,7 +260,7 @@
 .writingList { padding-top:30px; }
 .writingList > a { display:flex; align-items:center; gap:24px; border-top:1px solid var(--line); padding:28px 0; position:relative; transition:transform .4s; }
 .writingList > a:last-child { border-bottom:1px solid var(--line); }
-.writingList > a:hover { transform:translateX(10px); }
+@media(hover:hover) and (pointer:fine) { .writingList > a:hover { transform:translateX(10px); } }
 .articleNumber { font-size:10px; color:var(--muted); }
 .writingList small { font-size:9px; color:var(--muted); }
 .writingList h3 { font-size:21px; line-height:1.3; letter-spacing:-.035em; font-weight:500; margin-top:7px; }
@@ -334,7 +334,7 @@
   .workJump { flex:0 0 44px; margin-top:0; }
   .project,.project:nth-child(odd) { display:flex; flex-direction:column; padding:30px 0; gap:24px; }
   .projectCopy,.project:nth-child(odd) .projectCopy { order:2; padding:5px 0 20px; }
-  .projectVisual,.project:nth-child(odd) .projectVisual { order:1; min-height:430px; }
+  .projectVisual,.project:nth-child(odd) .projectVisual { order:1; min-height:430px; padding-block:64px 36px; }
   .projectCategory { margin-bottom:16px; font-size:9px; }
   .projectCopy h3 { font-size:39px; }
   .projectCopy > p { margin:18px 0; font-size:13px; }
@@ -343,6 +343,8 @@
   .studyMotion { width:83%; }
   .captionStudy { padding:18px; }
   .captionBubble p { font-size:16px; }
+  .languageButtons button,.formatChoices button { min-height:44px; }
+  .formatChoices button { justify-content:center; }
   .frameworks { gap:4px; }
   .frameworks button { font-size:8px; }
   .adapterStudy > svg { height:100px; }
@@ -392,7 +394,7 @@
 }
 
 @media(max-width:900px) { .desktopNav { display:none; } }
-@media(max-width:700px) { .menu nav a { font-size:clamp(26px,6.2vw,44px); gap:14px; } .menu nav a span { margin-right:8px; } }
+@media(max-width:700px) { .menu nav a { font-size:clamp(26px,6.2vw,44px); gap:14px; min-height:48px; padding-block:5px; } .menu nav a span { margin-right:8px; } }
 
 /* Keep ambient lighting static: only content transforms animate. */
 :global([data-theme='dark']) .hero { background:radial-gradient(ellipse 45% 65% at 58% 48%,#14374c 0%,#10232f 42%,transparent 78%); }
