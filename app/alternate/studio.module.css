@@ -395,6 +395,11 @@
 
 @media(max-width:900px) { .desktopNav { display:none; } }
 @media(max-width:700px) { .menu nav a { font-size:clamp(26px,6.2vw,44px); gap:14px; min-height:48px; padding-block:5px; } .menu nav a span { margin-right:8px; } }
+@media(max-height:500px) {
+  .menu { padding-block:16px; }
+  .menu nav a { font-size:clamp(24px,6vh,30px); min-height:44px; padding-block:4px; }
+  .menuTop,.menuBottom { flex-shrink:0; }
+}
 
 /* Keep ambient lighting static: only content transforms animate. */
 :global([data-theme='dark']) .hero { background:radial-gradient(ellipse 45% 65% at 58% 48%,#14374c 0%,#10232f 42%,transparent 78%); }
