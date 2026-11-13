@@ -19,7 +19,7 @@ const social = [['GitHub', 'https://github.com/Arjun220905'], ['LinkedIn', 'http
 
 function Entrance({ children, className = '' }: { children: ReactNode; className?: string }) {
   const reduced = usePrefersReducedMotion();
-  return <motion.div className={className} initial={reduced ? false : { opacity: 1, transform: 'translateY(45px)' }} whileInView={{ opacity: 1, transform: 'translateY(0px)' }} viewport={{ once: false, amount: .12 }} transition={{ duration: reduced ? 0 : .8, ease }}>{children}</motion.div>;
+  return <motion.div className={className} initial={reduced ? false : { opacity: 0, transform: 'translateY(32px)' }} whileInView={{ opacity: 1, transform: 'translateY(0px)' }} viewport={{ once: false, amount: .12 }} transition={{ duration: reduced ? 0 : .8, ease }}>{children}</motion.div>;
 }
 
 function Navigation() {
@@ -54,9 +54,9 @@ function Hero() {
   return <section ref={ref} id="studio-top" className={s.hero}>
     <div className={s.heroOverline}><span><span className={s.statusDot} /> AI agent automation × backend systems</span></div>
     <div className={s.heroStage}>
-      <motion.div className={s.heroStatement} initial={{ opacity: 0, transform: 'translateY(24px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} transition={{ duration: .9, ease }}><h1>Building things.<br/>Making sense<br/>of them.</h1><a className={s.textLink} href="#studio-work">Explore the work <ArrowDown size={18}/></a></motion.div>
+      <motion.div className={s.heroStatement} initial={reduced ? false : { opacity: 0, transform: 'translateY(24px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} transition={{ duration: .9, ease }}><h1>{['Building things.', 'Making sense', 'of them.'].map((line, i) => <motion.span key={line} style={{ display: 'block' }} initial={reduced ? false : { opacity: 0, transform: 'translateY(32px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} transition={{ duration: .75, delay: .12 + i * .12, ease }}>{line}</motion.span>)}</h1><a className={s.textLink} href="#studio-work">Explore the work <ArrowDown size={18}/></a></motion.div>
       <motion.div className={s.sculptureWrap} style={reduced ? undefined : { y }}><InceptionTop /></motion.div>
-      <div className={s.heroAside}><span className={s.smallLabel}>A little context</span><p>I build backend tools and explain how to use them, so a good idea can become a working integration.</p><a href="https://www.linkedin.com/in/arjun-manivannan/" target="_blank" rel="noreferrer" className={s.circleLink} aria-label="Connect with Arjun on LinkedIn"><ArrowUpRight /></a></div>
+      <motion.div className={s.heroAside} initial={reduced ? false : { opacity: 0, transform: 'translateY(20px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} transition={{ duration: .7, delay: .4, ease }}><span className={s.smallLabel}>A little context</span><p>I build backend tools and explain how to use them, so a good idea can become a working integration.</p><a href="https://www.linkedin.com/in/arjun-manivannan/" target="_blank" rel="noreferrer" className={s.circleLink} aria-label="Connect with Arjun on LinkedIn"><ArrowUpRight /></a></motion.div>
     </div>
     <div className={s.heroBottom}><span>Systems that work. Stories that make sense.</span><a href="#studio-work">Scroll to explore <ArrowDown size={14} /></a></div>
   </section>;
@@ -94,21 +94,23 @@ function Project({ index }: { index: number }) {
   const y = useTransform(scrollYProgress, [0, 1], [45, -45]);
   const rotate = useTransform(scrollYProgress, [0, .5, 1], [2, 0, -2]);
   const p = projects[index];
-  return <motion.article initial={reduced ? false : { opacity: 1, transform: 'translateY(55px)' }} whileInView={{ opacity: 1, transform: 'translateY(0px)' }} viewport={{ once: false, amount: .15 }} transition={{ duration: .85, ease }} ref={ref} className={s.project} id={`studio-project-${index}`}><div className={s.projectCopy}><span className={s.projectCategory}>{p.category}</span><h3>{p.title}</h3><p>{p.text}</p><span className={s.projectStack}>{p.stack}</span><a className={s.projectLink} href={p.href} target="_blank" rel="noreferrer">{p.linkLabel || 'View source'}<ArrowUpRight size={20}/></a><span className={s.projectSignal}>{p.signal}</span></div><div className={s.projectVisual} data-study={p.study}><span className={s.visualIndex}>{String(index + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}</span><motion.div className={s.studyMotion} style={reduced ? undefined : { y, rotate }}><ProjectStudy index={p.study}/></motion.div></div></motion.article>;
+  return <motion.article initial={reduced ? false : { opacity: 0, transform: 'translateY(40px)' }} whileInView={{ opacity: 1, transform: 'translateY(0px)' }} viewport={{ once: false, amount: .15 }} transition={{ duration: .85, ease }} ref={ref} className={s.project} id={`studio-project-${index}`}><div className={s.projectCopy}><span className={s.projectCategory}>{p.category}</span><h3>{p.title}</h3><p>{p.text}</p><span className={s.projectStack}>{p.stack}</span><a className={s.projectLink} href={p.href} target="_blank" rel="noreferrer">{p.linkLabel || 'View source'}<ArrowUpRight size={20}/></a><span className={s.projectSignal}>{p.signal}</span></div><div className={s.projectVisual} data-study={p.study}><span className={s.visualIndex}>{String(index + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}</span><motion.div className={s.studyMotion} style={reduced ? undefined : { y, rotate }}><ProjectStudy index={p.study}/></motion.div></div></motion.article>;
 }
 
 function OutsideTheBuild() {
+  const reduced = usePrefersReducedMotion();
   return <section id="studio-outside" className={s.outside}>
     <div className={s.sectionMarker}><span className={s.marker}/><span>Outside the build</span></div>
     <div className={s.outsideTitle}><h2>Always another<br/>rabbit hole.</h2><p>Movies, music, puzzles, and the urge to figure out how the magic trick works.</p></div>
-    <div className={s.objects}>{interests.map((item, i) => <article key={item.title} className={s.object}>
+    <div className={s.objects}>{interests.map((item, i) => <motion.article key={item.title} className={s.object} initial={reduced ? false : { opacity: 0, transform: 'translateY(36px) scale(.97)' }} whileInView={{ opacity: 1, transform: 'translateY(0px) scale(1)' }} viewport={{ once: false, amount: .18 }} whileHover={reduced ? undefined : { y: -6 }} transition={{ type: 'spring', stiffness: 160, damping: 24 }}>
       <div className={s.objectStage}>{i === 0 ? <CinemaFrame/> : i === 1 ? <CompactDisc/> : <KnightPuzzle/>}</div>
       <div className={s.objectCopy}><span>{item.category.toLowerCase()}</span><h3>{item.title}</h3><p>{item.text}</p></div>
-    </article>)}</div>
+    </motion.article>)}</div>
   </section>;
 }
 
 function Writing() {
+  const reduced = usePrefersReducedMotion();
   return <section id="studio-writing" className={s.writing}>
     <div className={s.writingIntro}>
       <div className={s.sectionMarker}><span className={s.marker}/><span>Field notes</span></div>
@@ -116,9 +118,9 @@ function Writing() {
       <p>Writing demos, guides, and notes that make an integration easier to understand and use.</p>
       <a className={s.textLink} href="https://meetstream.ai/blog/author/arjun/" target="_blank" rel="noreferrer">All writing <ArrowUpRight size={18}/></a>
     </div>
-    <div className={s.writingList}>{studioArticles.map(({ title, slug, topic, date }, i) => <a href={`https://meetstream.ai/blog/${slug}`} target="_blank" rel="noreferrer" key={slug}>
+    <div className={s.writingList}>{studioArticles.map(({ title, slug, topic, date }, i) => <motion.a initial={reduced ? false : { opacity: 0, transform: 'translateY(22px)' }} whileInView={{ opacity: 1, transform: 'translateY(0px)' }} viewport={{ once: false, amount: .3 }} transition={{ duration: .5, ease }} href={`https://meetstream.ai/blog/${slug}`} target="_blank" rel="noreferrer" key={slug}>
       <span className={s.articleNumber}>0{i+1}</span><div><small>{topic}{date && ` / ${date}`}</small><h3>{title}</h3></div><ArrowUpRight/>
-    </a>)}</div>
+    </motion.a>)}</div>
   </section>;
 }
 

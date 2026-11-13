@@ -6,12 +6,12 @@
   overflow:clip; isolation:isolate; -webkit-font-smoothing:antialiased;
 }
 :global([data-theme='dark']) .page {
-  --paper:#17181b; --ink:#efefed; --muted:#b9bac2; --line:#41434b;
-  --soft:#222428; --blue:#b6c8e2; --bright:#2c323e; --card:#292b31;
-  --hover:#343b48;
+  --paper:#101419; --ink:#edf2f6; --muted:#a8b7c4; --line:#32414e;
+  --soft:#171f27; --blue:#9cc9e4; --bright:#183549; --card:#1b2731;
+  --hover:#284557;
 }
 :global(html[data-theme='dark']):has(.page),
-:global([data-theme='dark'] body):has(.page) { background:#17181b; }
+:global([data-theme='dark'] body):has(.page) { background:#101419; }
 .page *, .page *::before, .page *::after { box-sizing:border-box; }
 .page h1,.page h2,.page h3,.page p { margin:0; font-style:normal; }
 .page h1,.page h2,.page h3 { font-family:inherit; }
@@ -274,7 +274,7 @@
 .footerHeadline:hover svg { transform:rotate(45deg) translateY(-12px); }
 .footerBottom { padding-top:28px; border-top:1px solid currentColor; }
 .footerBottom > div { display:flex; gap:22px; }
-:global([data-theme='dark']) .footer { background:#111215; color:var(--ink); border-top:1px solid var(--line); }
+:global([data-theme='dark']) .footer { background:#0c1014; color:var(--ink); border-top:1px solid var(--line); }
 :global([data-theme='dark']) .footerBottom { border-color:var(--line); }
 :global([data-theme='dark']) .chatAnswer,
 :global([data-theme='dark']) .floatingTag,
@@ -393,3 +393,14 @@
 
 @media(max-width:900px) { .desktopNav { display:none; } }
 @media(max-width:700px) { .menu nav a { font-size:clamp(26px,6.2vw,44px); gap:14px; } .menu nav a span { margin-right:8px; } }
+
+/* Keep ambient lighting static: only content transforms animate. */
+:global([data-theme='dark']) .hero { background:radial-gradient(ellipse 45% 65% at 58% 48%,#14374c 0%,#10232f 42%,transparent 78%); }
+:global([data-theme='dark']) .projectVisual { background:radial-gradient(ellipse at 75% 25%,var(--bright),var(--card) 72%); }
+@media(max-width:700px), (pointer:coarse) {
+  .sculptureWrap, .studyMotion { transform:none!important; }
+  .object { transform:none!important; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .heroStatement, .heroStatement h1 > span, .heroAside, .project, .object, .writingList > a { opacity:1!important; transform:none!important; }
+}

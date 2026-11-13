@@ -8,6 +8,6 @@ const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-dm', display: 'sw
 
 export const metadata: Metadata = { title: 'Arjun M — AI Agent Automation × Backend Systems', description: 'Arjun M is an AI Agent Automation Intern at MeetStream.ai, working across AI agent workflows and backend systems, with a background in developer relations and go-to-market.' };
 
-const themeScript = `try { const saved = localStorage.getItem('arjun-portfolio-theme'); const theme = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); document.documentElement.dataset.theme = theme; } catch {}`;
+const themeScript = `try { const saved = localStorage.getItem('arjun-portfolio-theme'); document.documentElement.dataset.theme = saved === 'dark' ? 'dark' : 'light'; } catch { document.documentElement.dataset.theme = 'light'; }`;
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="en" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head><body className={`${dmSans.variable} ${dmSans.className}`}>{children}</body></html>; }
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="en" data-theme="light" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head><body className={`${dmSans.variable} ${dmSans.className}`}>{children}</body></html>; }
