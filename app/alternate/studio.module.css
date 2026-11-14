@@ -415,3 +415,5 @@
 :global([data-theme='dark']) .page :is(h1,h2,h3,h4) { color:var(--heading); }
 
 :global([data-theme='dark']) .page ::selection { background:#33418c; color:var(--ink); }
+
+.heroOverline,.heroBottom { position:relative; z-index:1; }

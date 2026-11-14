@@ -11,6 +11,7 @@ import { TraceStudy, WalletStudy } from './studio-new-studies';
 import { CinemaFrame, CompactDisc, KnightPuzzle } from './studio-interests';
 import { studioArticles } from './studio-writing';
 import { InceptionTop } from './inception-top';
+import { HeroAtmosphere } from './hero-atmosphere';
 import s from './studio.module.css';
 
 const ease = [.22, 1, .36, 1] as const;
@@ -52,6 +53,7 @@ function Hero() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const y = useTransform(scrollYProgress, [0, 1], [0, 130]);
   return <section ref={ref} id="studio-top" className={s.hero}>
+    <HeroAtmosphere/>
     <div className={s.heroOverline}><span><span className={s.statusDot} /> AI agent automation × backend systems</span></div>
     <div className={s.heroStage}>
       <motion.div className={s.heroStatement} initial={reduced ? false : { opacity: 0, transform: 'translateY(24px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} transition={{ duration: .9, ease }}><h1>{['Building things.', 'Making sense', 'of them.'].map((line, i) => <motion.span key={line} style={{ display: 'block' }} initial={reduced ? false : { opacity: 0, transform: 'translateY(32px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} transition={{ duration: .75, delay: .12 + i * .12, ease }}>{line}</motion.span>)}</h1><a className={s.textLink} href="#studio-work">Explore the work <ArrowDown size={18}/></a></motion.div>

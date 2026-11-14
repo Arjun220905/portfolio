@@ -1,0 +1,10 @@
+.atmosphere { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+.orbit { position:absolute; left:29%; top:16%; width:58%; height:65%; }
+.arc { position:absolute; inset:0; display:block; border-radius:50%; border:1px solid transparent; border-top-color:color-mix(in srgb,var(--blue),transparent 58%); border-right-color:color-mix(in srgb,var(--blue),transparent 83%); background:radial-gradient(ellipse at 50% 0%,color-mix(in srgb,var(--blue),transparent 88%),transparent 58%); transform:rotate(-24deg) scale(.94); }
+.counterArc { inset:15% -8%; border-top-color:transparent; border-right-color:transparent; border-bottom-color:color-mix(in srgb,var(--blue),transparent 65%); border-left-color:color-mix(in srgb,var(--blue),transparent 88%); background:radial-gradient(ellipse at 50% 100%,color-mix(in srgb,var(--blue),transparent 92%),transparent 58%); transform:rotate(32deg) scale(1.04); }
+@media(max-width:700px) {
+  .orbit { left:12%; top:35%; width:80%; height:28%; }
+  .arc { border-right-color:transparent; }
+  .counterArc { inset:18% -3%; }
+}
+@media(prefers-reduced-motion:reduce) { .arc { transform:none!important; } }
