@@ -12,11 +12,11 @@ export function HeroAtmosphere() {
 
   useEffect(() => {
     if (!ref.current || reduced || !inView) return;
-    const arcs = ref.current.querySelectorAll<HTMLSpanElement>('span');
-    const controls = [
-      animate(arcs[0], { transform: ['rotate(-24deg) scale(.94)', 'rotate(18deg) scale(1.06)', 'rotate(-24deg) scale(.94)'] }, { duration: 26, repeat: Infinity, ease: 'easeInOut' }),
-      animate(arcs[1], { transform: ['rotate(32deg) scale(1.04)', 'rotate(-20deg) scale(.92)', 'rotate(32deg) scale(1.04)'] }, { duration: 34, repeat: Infinity, ease: 'easeInOut' }),
-    ];
+    const light = ref.current.querySelector<HTMLSpanElement>('span');
+    if (!light) return;
+    const controls = [animate(light, {
+      transform: ['translate(-12%, 5%) scale(.95)', 'translate(12%, -6%) scale(1.08)', 'translate(-12%, 5%) scale(.95)'],
+    }, { duration: 22, repeat: Infinity, ease: 'easeInOut' })];
     const visibility = () => { for (const control of controls) { if (document.hidden) control.pause(); else control.play(); } };
     visibility();
     document.addEventListener('visibilitychange', visibility);
@@ -26,5 +26,5 @@ export function HeroAtmosphere() {
     };
   }, [inView, reduced]);
 
-  return <div ref={ref} className={s.atmosphere} aria-hidden="true"><div className={s.orbit}><span className={s.arc}/><span className={`${s.arc} ${s.counterArc}`}/></div></div>;
+  return <div ref={ref} className={s.atmosphere} aria-hidden="true"><span className={s.light}/></div>;
 }
